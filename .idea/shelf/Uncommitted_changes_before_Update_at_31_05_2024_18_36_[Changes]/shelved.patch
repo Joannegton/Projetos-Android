@@ -1,0 +1,72 @@
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Android Projects with Java, Kotlin, and Jetpack Compose\r\n\r\n## Descrição\r\n\r\nBem-vindo ao repositório central de projetos desenvolvidos para Android utilizando Java e/ou Kotlin, com foco no Jetpack Compose. Este repositório tem como objetivo fornecer exemplos práticos, tutoriais e referências para ajudar desenvolvedores a aprender e aprimorar suas habilidades no desenvolvimento de aplicativos Android modernos.\r\n\r\n## Estrutura do Repositório\r\n\r\nO repositório está organizado em diretórios, cada um representando um projeto ou exemplo específico.\r\n\r\n\r\n## Pré-requisitos\r\n\r\n- Android Studio Arctic Fox ou superior\r\n- Conhecimento básico em Kotlin e/ou Java\r\n- Gradle 7.0 ou superior\r\n\r\n## Como Começar\r\n\r\n1. **Clone o repositório:**\r\n    ```bash\r\n    git clone https://github.com/usuario/android-projects.git\r\n    cd android-projects\r\n    ```\r\n\r\n2. **Abra o projeto no Android Studio:**\r\n    - File -> Open -> Selecione o diretório do projeto que deseja explorar.\r\n\r\n3. **Execute o projeto:**\r\n    - Conecte um dispositivo Android ou inicie um emulador.\r\n    - Clique no botão \"Run\" no Android Studio.\r\n\r\n## Contribuição\r\n\r\nContribuições são bem-vindas! Sinta-se à vontade para enviar pull requests com melhorias, novos exemplos de projetos ou correções de bugs. Para contribuir:\r\n\r\n1. Fork o repositório.\r\n2. Crie uma nova branch (`git checkout -b feature/nova-funcionalidade`).\r\n3. Faça suas alterações e comite (`git commit -am 'Adiciona nova funcionalidade'`).\r\n4. Envie para a branch (`git push origin feature/nova-funcionalidade`).\r\n5. Abra um Pull Request.\r\n\r\n## Licença\r\n\r\nEste repositório está licenciado sob a [MIT License](LICENSE).\r\n\r\n## Recursos Adicionais\r\n\r\n- [Documentação Oficial do Jetpack Compose](https://developer.android.com/jetpack/compose/documentation)\r\n- [Tutoriais de Kotlin](https://kotlinlang.org/docs/tutorials.html)\r\n- [Desenvolvimento Android com Java](https://developer.android.com/training/basics/firstapp)\r\n\r\n## Contato\r\n\r\nPara dúvidas ou sugestões, abra uma issue ou entre em contato pelo email [seu-email@example.com](mailto:seu-email@example.com).\r\n\r\n---\r\n\r\nEsperamos que este repositório seja útil para você! Boas codificações!
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-16LE
+===================================================================
+diff --git a/README.md b/README.md
+--- a/README.md	(revision 87bc0c3ac0a6f0f7db694491de69d2dc27af89b8)
++++ b/README.md	(date 1717189925759)
+@@ -1,59 +1,1 @@
+-# Android Projects with Java, Kotlin, and Jetpack Compose
+-
+-## Descrição
+-
+-Bem-vindo ao repositório central de projetos desenvolvidos para Android utilizando Java e/ou Kotlin, com foco no Jetpack Compose. Este repositório tem como objetivo fornecer exemplos práticos, tutoriais e referências para ajudar desenvolvedores a aprender e aprimorar suas habilidades no desenvolvimento de aplicativos Android modernos.
+-
+-## Estrutura do Repositório
+-
+-O repositório está organizado em diretórios, cada um representando um projeto ou exemplo específico.
+-
+-
+-## Pré-requisitos
+-
+-- Android Studio Arctic Fox ou superior
+-- Conhecimento básico em Kotlin e/ou Java
+-- Gradle 7.0 ou superior
+-
+-## Como Começar
+-
+-1. **Clone o repositório:**
+-    ```bash
+-    git clone https://github.com/usuario/android-projects.git
+-    cd android-projects
+-    ```
+-
+-2. **Abra o projeto no Android Studio:**
+-    - File -> Open -> Selecione o diretório do projeto que deseja explorar.
+-
+-3. **Execute o projeto:**
+-    - Conecte um dispositivo Android ou inicie um emulador.
+-    - Clique no botão "Run" no Android Studio.
+-
+-## Contribuição
+-
+-Contribuições são bem-vindas! Sinta-se à vontade para enviar pull requests com melhorias, novos exemplos de projetos ou correções de bugs. Para contribuir:
+-
+-1. Fork o repositório.
+-2. Crie uma nova branch (`git checkout -b feature/nova-funcionalidade`).
+-3. Faça suas alterações e comite (`git commit -am 'Adiciona nova funcionalidade'`).
+-4. Envie para a branch (`git push origin feature/nova-funcionalidade`).
+-5. Abra um Pull Request.
+-
+-## Licença
+-
+-Este repositório está licenciado sob a [MIT License](LICENSE).
+-
+-## Recursos Adicionais
+-
+-- [Documentação Oficial do Jetpack Compose](https://developer.android.com/jetpack/compose/documentation)
+-- [Tutoriais de Kotlin](https://kotlinlang.org/docs/tutorials.html)
+-- [Desenvolvimento Android com Java](https://developer.android.com/training/basics/firstapp)
+-
+-## Contato
+-
+-Para dúvidas ou sugestões, abra uma issue ou entre em contato pelo email [seu-email@example.com](mailto:seu-email@example.com).
+-
+----
+-
+-Esperamos que este repositório seja útil para você! Boas codificações!
+\ No newline at end of file
++# Projetos-Android
