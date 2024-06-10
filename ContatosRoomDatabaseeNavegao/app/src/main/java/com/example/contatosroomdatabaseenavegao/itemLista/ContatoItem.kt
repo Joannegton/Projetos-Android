@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -87,7 +86,8 @@ fun ContatoItem(
                 modifier = Modifier.constrainAs(txtNome){
                     top.linkTo(parent.top, margin = 10.dp)
                     start.linkTo(parent.start, margin = 10.dp)
-                }
+                },
+                onTextLayout = {}
             )
 
             Text(
@@ -97,7 +97,8 @@ fun ContatoItem(
                 modifier = Modifier.constrainAs(txtIdade){
                     top.linkTo(txtNome.bottom, margin = 3.dp)
                     start.linkTo(parent.start, margin = 10.dp)
-                }
+                },
+                onTextLayout = {}
             )
 
             Text(
@@ -107,7 +108,8 @@ fun ContatoItem(
                 modifier = Modifier.constrainAs(txtCelular){
                     top.linkTo(txtIdade.bottom, margin = 3.dp)
                     start.linkTo(parent.start, margin = 10.dp)
-                }
+                },
+                onTextLayout = {}
             )
 
             IconButton(

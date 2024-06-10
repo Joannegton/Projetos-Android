@@ -2,7 +2,6 @@
 
 package com.example.blocodenotas_dataroom
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -77,7 +75,8 @@ fun BlocoDeNotasApp() {
                         text = "Bloco de notas",
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = Color.Black,
+                        onTextLayout = {}
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Yellow)
@@ -110,7 +109,7 @@ fun BlocoDeNotasApp() {
                 value = anotacao,
                 onValueChange = { novaAnotacao -> anotacao = novaAnotacao },
                 textStyle = TextStyle(fontSize = 20.sp),
-                label = { Text(text = "Insira sua anotação...") },
+                    label = { Text(text = "Insira sua anotação...", onTextLayout = {}) },
                 modifier = Modifier.fillMaxSize(),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.White,

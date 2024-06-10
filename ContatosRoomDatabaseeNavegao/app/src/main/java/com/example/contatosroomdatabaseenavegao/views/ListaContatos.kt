@@ -52,7 +52,7 @@ fun ListaContatos(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Agenda de Contatos", fontSize = 18.sp, color = White)
+                    Text(text = "Agenda de Contatos", fontSize = 18.sp, color = White, onTextLayout = {})
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Purple80)
             )

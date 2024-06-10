@@ -1,16 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.example.blocodenotas_dataroom"
+    namespace = "com.example.listaapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.blocodenotas_dataroom"
+        applicationId = "com.example.listaapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -42,7 +40,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -61,7 +59,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,17 +67,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation ("androidx.datastore:datastore-preferences:1.1.1") //DataStore Preferences
-
-    //Navigation
-    val nav_version = "2.7.7"
-    implementation ("androidx.navigation:navigation-compose:$nav_version")
-
-    //Hilt
-    implementation ("com.google.dagger:hilt-android:2.49")
-    kapt("com.google.dagger:hilt-compiler:2.44")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
-
-
-
+    //Dependencia autoComplete
+    implementation ("androidx.appcompat:appcompat:1.7.0")
 }
