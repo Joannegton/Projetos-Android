@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -24,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,11 +37,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.compose.DiarioDeMemoriasTheme
+import com.example.compose.backgoundContainer
+import com.example.compose.primaryContainerDark
+import com.example.compose.primaryContainerLight
+import com.example.compose.primaryContainerLightMediumContrast
+import com.example.compose.secondaryDark
+import com.example.compose.secondaryLight
+import com.example.compose.tertiaryDark
+import com.example.compose.tertiaryLight
 import com.example.diariodememorias.models.Memoria
 import com.example.diariodememorias.funcoes.adicionarMemoria
 import com.example.diariodememorias.funcoes.conectarparceiro
@@ -136,8 +150,8 @@ fun MemoryCard(memory: Memoria) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(text = memory.title, style = MaterialTheme.typography.titleLarge)
-            Text(text = memory.description, style = MaterialTheme.typography.bodyMedium)
+            Text(text = memory.title, style = MaterialTheme.typography.titleLarge, fontSize = 22.sp)
+            Text(text = memory.description, style = MaterialTheme.typography.bodyMedium, fontSize = 20.sp)
             memory.imageUri?.let {
                 Image(
                     painter = rememberImagePainter(memory.imageUri),
@@ -174,16 +188,45 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
                     TextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text("Título") })
+                        label = { Text("Título") },
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = tertiaryDark,
+                            unfocusedContainerColor = tertiaryDark,
+                            focusedTextColor = secondaryLight,
+                            unfocusedTextColor = secondaryLight,
+                            cursorColor = secondaryLight,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = secondaryLight,
+                            focusedLabelColor = secondaryLight,
+                            unfocusedLabelColor = secondaryLight,
+                        ),
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     TextField(
                         value = description,
                         onValueChange = { description = it },
-                        label = { Text("Descrição") })
+                        label = { Text("Descrição") },
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = tertiaryDark,
+                            unfocusedContainerColor = tertiaryDark,
+                            focusedTextColor = secondaryLight,
+                            unfocusedTextColor = secondaryLight,
+                            cursorColor = secondaryLight,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = secondaryLight,
+                            focusedLabelColor = secondaryLight,
+                            unfocusedLabelColor = secondaryLight,
+                        )
+                    )
                     // Seleção de imagem e upload
                     Button(
-                        onClick = { imagePickerLauncher.launch("image/*") }
+                        onClick = { imagePickerLauncher.launch("image/*") },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = tertiaryDark,
+                            contentColor = secondaryLight
+                        )
                     ) {
-                        Text("Selecionar Imagem")
+                        Text("Selecionar Imagem", fontWeight = FontWeight.Bold)
                     }
 
                     imagemUri?.let {
@@ -199,7 +242,8 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
                 }
             },
             confirmButton = {
-                Button(onClick = {
+                Button(
+                    onClick = {
                     if (title.isNotEmpty() && description.isNotEmpty() && imagemUri != null) {
                         enviarMidia(imagemUri!!) { downloadUrl ->
                             if (downloadUrl != "null") {
@@ -221,15 +265,27 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
                     } else {
                         Log.i("TAG", "Erro ao adicionar a memória")
                     }
-                }) {
+                },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = tertiaryDark,
+                        contentColor = secondaryLight
+                    )
+                ) {
                     Text(text = "Adicionar")
                 }
             },
             dismissButton = {
-                Button(onClick = { showDialog = false }) {
+                Button(onClick = { showDialog = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = tertiaryDark,
+                        contentColor = secondaryLight
+                    )
+                ) {
                     Text("Cancelar")
                 }
-            }
+            },
+            containerColor = primaryContainerLight,
+            titleContentColor = tertiaryLight
         )
     }
 }
@@ -238,8 +294,14 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
 @Composable
 fun GreetinPreview() {
     DiarioDeMemoriasTheme {
-        DiaryApp()
-        //AddMemoryDialog(onAddMemory = { /*TODO*/ }) { /*TODO*/ }
+        val memoria = Memoria(
+            "Título da Memória",
+            "Descrição da Memória",
+            "https://example.com/image.jpg",
+            "usuarioId",
+            "parceiroId"
+        )
+        MemoryCard(memoria)
     }
 }
 

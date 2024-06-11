@@ -69,7 +69,7 @@ fun Login(onLoginSuccess: () -> Unit) {
         Spacer(modifier = Modifier.padding(10.dp))
 
         Image(
-            painter = painterResource(R.drawable.img), contentDescription = "nós",
+            painter = painterResource(R.drawable.eueela), contentDescription = "nós",
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
                 .border(5.dp, secondaryLight, MaterialTheme.shapes.medium)
