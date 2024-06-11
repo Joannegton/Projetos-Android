@@ -1,4 +1,4 @@
-package com.example.diariodememorias
+package com.example.diariodememorias.models
 
 
 data class Memoria(

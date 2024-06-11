@@ -1,7 +1,7 @@
 package com.example.diariodememorias.funcoes
 
 import android.net.Uri
-import com.example.diariodememorias.Memoria
+import com.example.diariodememorias.models.Memoria
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore

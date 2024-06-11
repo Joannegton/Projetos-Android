@@ -1,13 +1,11 @@
-package com.example.diariodememorias
+package com.example.diariodememorias.views
 
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,9 +34,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.example.compose.DiarioDeMemoriasTheme
+import com.example.diariodememorias.models.Memoria
 import com.example.diariodememorias.funcoes.adicionarMemoria
 import com.example.diariodememorias.funcoes.conectarparceiro
 import com.example.diariodememorias.funcoes.enviarMidia
@@ -47,9 +48,7 @@ import com.example.diariodememorias.funcoes.pegarMemorias
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import com.google.firebase.storage.storage
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +58,7 @@ fun DiaryApp() {
     var showAddMemoryDialog by remember { mutableStateOf(false) }
 
     val usuarioId = Firebase.auth.currentUser?.uid
-    var parceiroId = "89vwmTeizAYcULg7JBWMG4aArNc2"
+    var parceiroId = "mWOnWAQ6zGhgfzs7w0Wieii2ewc2"
 
     conectarparceiro(usuarioId, parceiroId) { sucesso, mensagem ->
         if (sucesso) {
@@ -235,5 +234,13 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun GreetinPreview() {
+    DiarioDeMemoriasTheme {
+        DiaryApp()
+        //AddMemoryDialog(onAddMemory = { /*TODO*/ }) { /*TODO*/ }
+    }
+}
 
 
