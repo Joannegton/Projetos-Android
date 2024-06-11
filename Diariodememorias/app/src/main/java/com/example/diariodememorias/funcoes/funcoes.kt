@@ -16,10 +16,23 @@ private val db = Firebase.firestore
 
 
 fun criarConta(email: String, senha: String, resultado: (Boolean, String?) -> Unit) {
-    auth.signInWithEmailAndPassword(email, senha)
+    auth.createUserWithEmailAndPassword(email, senha)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                resultado(true, null)
+                val usuario = auth.currentUser
+                val usuarioRef = db.collection("usuarios").document(usuario?.uid.toString())
+                val usuarioData = hashMapOf(
+                    "email" to email,
+                    "senha" to senha,
+                    "parceiroId" to null
+                )
+                usuarioRef.set(usuarioData)
+                    .addOnSuccessListener {
+                        resultado(true, null)
+                    }
+                    .addOnFailureListener{e ->
+                        resultado(false, e.message)
+                    }
             } else {
                 resultado(false, task.exception?.message)
             }
@@ -71,7 +84,16 @@ fun adicionarMemoria(memoria: Memoria, usuarioId: String, compartilhadoCom: Stri
 
 fun pegarMemorias(usuarioId: String, parceiroId: String?, resultado: (List<Memoria>) -> Unit){
     db.collection("memories")
-        //.whereIn("compartilhadoCom", listOf(null, parceiroId))
+        .whereIn("compartilhadoCom", listOf(null, parceiroId))
+        .orderBy("timestamp", Query.Direction.DESCENDING)
+        .get()
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val memorias = task.result?.documents?.map { it.toObject(Memoria::class.java) }?.filterNotNull() ?: listOf()
+                resultado(memorias)
+            }
+        }
+    db.collection("memories")
         .orderBy("timestamp", Query.Direction.DESCENDING)
         .get()
         .addOnCompleteListener { task ->

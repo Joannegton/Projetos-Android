@@ -59,7 +59,7 @@ fun DiaryApp() {
     var showAddMemoryDialog by remember { mutableStateOf(false) }
 
     val usuarioId = Firebase.auth.currentUser?.uid
-    var parceiroId: String = "89vwmTeizAYcULg7JBWMG4aArNc2"
+    var parceiroId = "89vwmTeizAYcULg7JBWMG4aArNc2"
 
     conectarparceiro(usuarioId, parceiroId) { sucesso, mensagem ->
         if (sucesso) {

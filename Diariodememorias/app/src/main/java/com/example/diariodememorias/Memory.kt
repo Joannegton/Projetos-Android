@@ -1,6 +1,5 @@
 package com.example.diariodememorias
 
-import android.net.Uri
 
 data class Memoria(
     val title: String = "",
