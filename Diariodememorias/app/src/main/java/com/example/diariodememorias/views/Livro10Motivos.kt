@@ -34,6 +34,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.example.compose.tertiaryDark
 import com.example.diariodememorias.R
@@ -43,7 +45,7 @@ import com.example.diariodememorias.models.Pagina
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LivroDeMemoriasScreen() {
+fun LivroDeMemoriasScreen(navController: NavController) {
     var livro by remember { mutableStateOf(Livro("", listOf())) }
     val pagerState = rememberPagerState(pageCount = { livro.paginas.size })
 
@@ -53,14 +55,14 @@ fun LivroDeMemoriasScreen() {
         }
 
         HorizontalPager(state = pagerState) { page ->
-            PaginaCard(livro.paginas[page])
+            PaginaCard(livro.paginas[page], navController)
         }
     }
 
 }
 
 @Composable
-fun PaginaCard(pagina: Pagina) {
+fun PaginaCard(pagina: Pagina, navController: NavController) {
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -70,7 +72,9 @@ fun PaginaCard(pagina: Pagina) {
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 40.dp)
         ) {
             Text(text = pagina.motivo, style = MaterialTheme.typography.titleLarge, fontSize = 25.sp)
+
             Spacer(modifier = Modifier.height(16.dp))
+
             Text(text = pagina.descricao, style = MaterialTheme.typography.bodyMedium, fontSize = 18.sp, textAlign = TextAlign.Justify, lineHeight = 25.sp)
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -97,7 +101,7 @@ fun PaginaCard(pagina: Pagina) {
 
                 if (pagina.motivo == "Motivo 10: Porque você é Você") {
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { navController.navigate("diary") },
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                     ) {
@@ -111,9 +115,3 @@ fun PaginaCard(pagina: Pagina) {
     }
 }
 
-
-@Preview
-@Composable
-private fun view() {
-    LivroDeMemoriasScreen()
-}

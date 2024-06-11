@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -104,9 +105,6 @@ fun DiaryApp() {
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Diário de Memórias") })
-        },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddMemoryDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Adicionar Memória")
@@ -150,8 +148,16 @@ fun MemoryCard(memory: Memoria) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(text = memory.title, style = MaterialTheme.typography.titleLarge, fontSize = 22.sp)
-            Text(text = memory.description, style = MaterialTheme.typography.bodyMedium, fontSize = 20.sp)
+            Text(text = memory.title, style = MaterialTheme.typography.titleLarge, fontSize = 25.sp)
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(text = memory.description, style = MaterialTheme.typography.bodyMedium, fontSize = 18.sp, textAlign = TextAlign.Justify, lineHeight = 25.sp, maxLines = 3)
+
+            Text(text = "Ver mais", modifier = Modifier.fillMaxWidth().padding(end = 16.dp), textAlign = TextAlign.End)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             memory.imageUri?.let {
                 Image(
                     painter = rememberImagePainter(memory.imageUri),

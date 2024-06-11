@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import androidx.navigation.compose.rememberNavController
 import com.example.compose.secondaryLight
 import com.example.diariodememorias.R
 import kotlinx.coroutines.delay
@@ -98,11 +99,11 @@ fun ContagemRegressiva(onTimeout: () -> Unit) {
 @Composable
 fun MainScreen() {
     var showCountdown by remember { mutableStateOf(true) }
-
+    val navController = rememberNavController()
     if (showCountdown) {
         ContagemRegressiva(onTimeout = { showCountdown = false })
     } else {
-        LivroDeMemoriasScreen()
+        LivroDeMemoriasScreen(navController)
     }
 }
 
