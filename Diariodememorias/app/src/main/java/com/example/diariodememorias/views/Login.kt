@@ -136,11 +136,11 @@ fun Login(onLoginSuccess: () -> Unit) {
 
         Button(
             onClick = {
-                entrar(email, password+"dias") { sucesso, erro ->
+                entrar(email, password+"dias") { sucesso, _ ->
                     if (sucesso) {
                         onLoginSuccess()
                     } else {
-                        Toast.makeText(context, "Erro: $erro", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Não sabe, não sabeeee", Toast.LENGTH_SHORT).show()
                     }
                 }
             },

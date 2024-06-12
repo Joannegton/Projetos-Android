@@ -1,12 +1,17 @@
 package com.example.diariodememorias.views
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,12 +43,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.example.compose.DiarioDeMemoriasTheme
 import com.example.compose.backgoundContainer
@@ -60,20 +69,24 @@ import com.example.diariodememorias.funcoes.conectarparceiro
 import com.example.diariodememorias.funcoes.enviarMidia
 import com.example.diariodememorias.funcoes.fetchMemories
 import com.example.diariodememorias.funcoes.pegarMemorias
+import com.example.diariodememorias.ui.componentes.VisualizadorImagem
+import com.example.diariodememorias.ui.componentes.VisualizadorImagemUrl
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DiaryApp() {
     val memories = remember { mutableStateListOf<Memoria>() }
     var showAddMemoryDialog by remember { mutableStateOf(false) }
+    var memorias by remember { mutableStateOf(listOf<Memoria>()) }
+
 
     val usuarioId = Firebase.auth.currentUser?.uid
-    var parceiroId = "mWOnWAQ6zGhgfzs7w0Wieii2ewc2"
+    var parceiroId = "TFBncpRirNRNK2L1Q84KschgPED3"
 
     conectarparceiro(usuarioId, parceiroId) { sucesso, mensagem ->
         if (sucesso) {
@@ -111,65 +124,94 @@ fun DiaryApp() {
             }
         }
     ) {
-        Column(modifier = Modifier.padding(it)) {
-            ListaMemoriaScreen(usuarioId.toString(), parceiroId)
-            if (showAddMemoryDialog) {
-                AddMemoriaScreen(usuarioId.toString(), parceiroId, showAddMemoryDialog)
+        Box {
+            val imagePainter = rememberImagePainter("https://example.com/your-image.jpg")
+            var imagem by remember { mutableStateOf(imagePainter) }
+            var showDialog by remember { mutableStateOf(false) }
+
+            Column(Modifier.fillMaxSize()) {
+                LaunchedEffect(Unit) {
+                    pegarMemorias(usuarioId.toString(), parceiroId) { listaMemorias ->
+                        memorias = listaMemorias
+                    }
+                }
+
+
+
+
+                LazyColumn() {
+                    items(memorias) { memory ->
+                        MemoryCard(memory) { img, show ->
+                            imagem = img
+                            showDialog = show
+                        }
+                    }
+                }
+                if (showAddMemoryDialog) {
+                    AddMemoriaScreen(usuarioId.toString(), parceiroId, showAddMemoryDialog)
+                }
             }
+            VisualizadorImagemUrl(
+                imagePainter = imagem,
+                dialog = showDialog,
+                onDialogDismiss = { showDialog = false }
+            )
         }
 
     }
 }
 
-@Composable
-fun ListaMemoriaScreen(usuarioId: String, parceiroId: String?) {
-    var memorias by remember { mutableStateOf(listOf<Memoria>()) }
-
-    LaunchedEffect(Unit) {
-        pegarMemorias(usuarioId, parceiroId.toString()) { listaMemorias ->
-            memorias = listaMemorias
-        }
-    }
-    LazyColumn {
-        items(memorias) { memory ->
-            MemoryCard(memory)
-        }
-    }
-}
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun MemoryCard(memory: Memoria) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+fun MemoryCard(memory: Memoria, onImagePainter: (ImagePainter, Boolean) -> Unit) {
+    var showImageDialog by remember { mutableStateOf(false) }
+    val imagem = rememberImagePainter(memory.imageUri)
+
+    Box(Modifier.fillMaxSize()) {
+        Card(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+                .zIndex(0f)
         ) {
-            Text(text = memory.title, style = MaterialTheme.typography.titleLarge, fontSize = 25.sp)
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = memory.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 25.sp
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = memory.description, style = MaterialTheme.typography.bodyMedium, fontSize = 18.sp, textAlign = TextAlign.Justify, lineHeight = 25.sp, maxLines = 3)
+                Text(
+                    text = memory.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Justify,
+                    lineHeight = 25.sp
+                )
 
-            Text(text = "Ver mais", modifier = Modifier.fillMaxWidth().padding(end = 16.dp), textAlign = TextAlign.End)
+                //Text(text = "Ver mais", modifier = Modifier.fillMaxWidth().padding(end = 16.dp), textAlign = TextAlign.End)
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            memory.imageUri?.let {
                 Image(
-                    painter = rememberImagePainter(memory.imageUri),
+                    painter = imagem,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
                         .clip(RoundedCornerShape(8.dp))
+                        .clickable { onImagePainter(imagem, true); showImageDialog = true }
+
                 )
             }
         }
     }
+
 }
 
 @Composable
@@ -187,7 +229,7 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
 
     if (showDialog) {
         AlertDialog(
-            onDismissRequest = {  },
+            onDismissRequest = { },
             title = { Text("Adicionar Memória") },
             text = {
                 Column {
@@ -250,28 +292,38 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
             confirmButton = {
                 Button(
                     onClick = {
-                    if (title.isNotEmpty() && description.isNotEmpty() && imagemUri != null) {
-                        enviarMidia(imagemUri!!) { downloadUrl ->
-                            if (downloadUrl != "null") {
-                                val memory =
-                                    Memoria(title, description, downloadUrl, usuarioId, parceiroId)
-                                adicionarMemoria(memory, usuarioId, parceiroId) { sucesso, mensagem ->
-                                    if (sucesso) {
-                                        Log.i("TAG", "Memória adicionada com sucesso")
-                                        showDialog = false
-                                    } else {
-                                        Log.e("TAG", "Erro ao adicionar a memória: $mensagem")
+                        if (title.isNotEmpty() && description.isNotEmpty() && imagemUri != null) {
+                            enviarMidia(imagemUri!!) { downloadUrl ->
+                                if (downloadUrl != "null") {
+                                    val memory =
+                                        Memoria(
+                                            title,
+                                            description,
+                                            downloadUrl,
+                                            usuarioId,
+                                            parceiroId
+                                        )
+                                    adicionarMemoria(
+                                        memory,
+                                        usuarioId,
+                                        parceiroId
+                                    ) { sucesso, mensagem ->
+                                        if (sucesso) {
+                                            Log.i("TAG", "Memória adicionada com sucesso")
+                                            showDialog = false
+                                        } else {
+                                            Log.e("TAG", "Erro ao adicionar a memória: $mensagem")
+                                        }
                                     }
+                                    Log.i("TAG", "Imagem enviada com sucesso")
+                                } else {
+                                    Log.e("TAG", "Erro ao enviar a imagem")
                                 }
-                                Log.i("TAG", "Imagem enviada com sucesso")
-                            } else {
-                                Log.e("TAG", "Erro ao enviar a imagem")
                             }
+                        } else {
+                            Log.i("TAG", "Erro ao adicionar a memória")
                         }
-                    } else {
-                        Log.i("TAG", "Erro ao adicionar a memória")
-                    }
-                },
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = tertiaryDark,
                         contentColor = secondaryLight
@@ -281,7 +333,8 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
                 }
             },
             dismissButton = {
-                Button(onClick = { showDialog = false },
+                Button(
+                    onClick = { showDialog = false },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = tertiaryDark,
                         contentColor = secondaryLight
@@ -300,14 +353,7 @@ fun AddMemoriaScreen(usuarioId: String, parceiroId: String?, showDialog: Boolean
 @Composable
 fun GreetinPreview() {
     DiarioDeMemoriasTheme {
-        val memoria = Memoria(
-            "Título da Memória",
-            "Descrição da Memória",
-            "https://example.com/image.jpg",
-            "usuarioId",
-            "parceiroId"
-        )
-        MemoryCard(memoria)
+        DiaryApp()
     }
 }
 

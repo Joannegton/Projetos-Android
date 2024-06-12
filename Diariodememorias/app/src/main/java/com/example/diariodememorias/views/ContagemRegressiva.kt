@@ -1,5 +1,6 @@
 package com.example.diariodememorias.views
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.secondaryLight
 import com.example.diariodememorias.R
@@ -33,8 +36,8 @@ import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
-fun ContagemRegressiva(onTimeout: () -> Unit) {
-    var timeLeft by remember { mutableStateOf(11) }
+fun ContagemRegressiva(navController: NavController) {
+    var timeLeft by remember { mutableIntStateOf(11) }
     var displayedImages by remember { mutableStateOf(listOf<Int>()) }
 
     val images = listOf(
@@ -56,7 +59,10 @@ fun ContagemRegressiva(onTimeout: () -> Unit) {
             delay(1000)
             timeLeft -= 1
         }
-        onTimeout()
+        Log.d("TAG", "Navegando para livro10motivos")
+
+        navController.navigate("livro10motivos")
+
     }
 
     BoxWithConstraints(
@@ -64,7 +70,7 @@ fun ContagemRegressiva(onTimeout: () -> Unit) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Iniciando em...", style = MaterialTheme.typography.headlineMedium)
+        Text("10 motivos por que eu amo você!", style = MaterialTheme.typography.headlineMedium)
         Text(
             text = timeLeft.toString(),
             style = MaterialTheme.typography.displayLarge,
@@ -75,6 +81,7 @@ fun ContagemRegressiva(onTimeout: () -> Unit) {
             val imageHeight = 200.dp
             val offsetX = remember { mutableStateOf(Random.nextFloat() * (this.maxWidth - imageWidth)) }
             val offsetY = remember { mutableStateOf(Random.nextFloat() * (this.maxHeight - imageHeight)) }
+
             Image(
                 painter = painterResource(id = image),
                 contentDescription = "Image for countdown",
@@ -96,14 +103,4 @@ fun ContagemRegressiva(onTimeout: () -> Unit) {
     }
 }
 
-@Composable
-fun MainScreen() {
-    var showCountdown by remember { mutableStateOf(true) }
-    val navController = rememberNavController()
-    if (showCountdown) {
-        ContagemRegressiva(onTimeout = { showCountdown = false })
-    } else {
-        LivroDeMemoriasScreen(navController)
-    }
-}
 
