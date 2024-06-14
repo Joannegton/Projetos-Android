@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text(text = "Buscador de CEP", fontSize = 20.sp, color = Color.White) },
+                            title = { Text(text = "Buscador de CEP", fontSize = 20.sp, color = Color.White, onTextLayout = {}) },
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = Color(0xFF1AB484)
                             )

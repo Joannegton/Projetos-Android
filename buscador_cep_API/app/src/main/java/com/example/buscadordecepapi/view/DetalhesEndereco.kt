@@ -23,9 +23,9 @@ fun DetalhesEndereco(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = logradouro)
-        Text(text = bairro)
-        Text(text = cidade)
-        Text(text = estado)
+        Text(text = logradouro, onTextLayout = {})
+        Text(text = bairro, onTextLayout = {})
+        Text(text = cidade, onTextLayout = {})
+        Text(text = estado, onTextLayout = {})
     }
 }
