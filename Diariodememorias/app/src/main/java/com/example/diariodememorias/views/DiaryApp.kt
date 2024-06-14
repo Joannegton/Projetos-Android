@@ -136,9 +136,6 @@ fun DiaryApp() {
                     }
                 }
 
-
-
-
                 LazyColumn() {
                     items(memorias) { memory ->
                         MemoryCard(memory) { img, show ->
