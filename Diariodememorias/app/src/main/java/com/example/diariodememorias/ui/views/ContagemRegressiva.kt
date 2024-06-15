@@ -1,4 +1,4 @@
-package com.example.diariodememorias.views
+package com.example.diariodememorias.ui.views
 
 import android.util.Log
 import androidx.compose.foundation.Image

@@ -1,5 +1,6 @@
 package com.example.diariodememorias.funcoes
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import com.example.diariodememorias.R
 import com.example.diariodememorias.models.Livro
@@ -42,16 +43,16 @@ fun criarConta(email: String, senha: String, resultado: (Boolean, String?) -> Un
         }
 }
 
-fun entrar(email: String, senha: String, resultado: (Boolean, String?) -> Unit){
-    auth.signInWithEmailAndPassword(email, senha)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                resultado(true, null)
-            } else {
-                resultado(false, task.exception?.message)
-            }
-        }
-}
+//fun entrar(email: String, senha: String, resultado: (Boolean, String?) -> Unit){
+//    auth.signInWithEmailAndPassword(email, senha)
+//        .addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                resultado(true, null)
+//            } else {
+//                resultado(false, task.exception?.message)
+//            }
+//        }
+//}
 
 fun conectarparceiro(usuarioId: String?, parceiroId: String, resultado: (Boolean, String?) -> Unit){
     val userRef = db.collection("usuarios").document(usuarioId.toString())
@@ -69,7 +70,7 @@ fun conectarparceiro(usuarioId: String?, parceiroId: String, resultado: (Boolean
     }
 }
 
-fun adicionarMemoria(memoria: Memoria, usuarioId: String, compartilhadoCom: String?, resultado: (Boolean, String?) -> Unit){
+fun adicionarMemoria(memoria: Memoria, usuarioId: String, compartilhadoCom: String?, resultado: (Boolean, String?) -> Unit) {
     val memoriaRef = db.collection("memories").document()
     val memoriaData = memoria.copy(
         compartilhadoCom = compartilhadoCom
@@ -84,6 +85,7 @@ fun adicionarMemoria(memoria: Memoria, usuarioId: String, compartilhadoCom: Stri
             }
         }
 }
+
 
 fun pegarMemorias(usuarioId: String, parceiroId: String?, resultado: (List<Memoria>) -> Unit){
     db.collection("memories")
