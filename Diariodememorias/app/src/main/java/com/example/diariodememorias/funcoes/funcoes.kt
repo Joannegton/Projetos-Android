@@ -43,17 +43,6 @@ fun criarConta(email: String, senha: String, resultado: (Boolean, String?) -> Un
         }
 }
 
-//fun entrar(email: String, senha: String, resultado: (Boolean, String?) -> Unit){
-//    auth.signInWithEmailAndPassword(email, senha)
-//        .addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                resultado(true, null)
-//            } else {
-//                resultado(false, task.exception?.message)
-//            }
-//        }
-//}
-
 fun conectarparceiro(usuarioId: String?, parceiroId: String, resultado: (Boolean, String?) -> Unit){
     val userRef = db.collection("usuarios").document(usuarioId.toString())
     val parceiroRef = db.collection("usuarios").document(parceiroId)
