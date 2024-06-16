@@ -234,8 +234,9 @@ fun AddMemoriaScreen(
                                     imageUri = imagemUri.toString(),
                                     usuarioId = usuarioId,
                                     compartilhadoCom = parceiroId
-                                ), usuarioId, parceiroId
+                                )
                             )
+                            viewModel.enviarMidia(imagemUri!!)
                             onDismiss()
                         } else {
                             Log.i("TAG", "Preencha todos os campos")
