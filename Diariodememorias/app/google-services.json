@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "570048756177",
+    "project_id": "diariomemorias",
+    "storage_bucket": "diariomemorias.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570048756177:android:6612a14f06558ce66948f0",
+        "android_client_info": {
+          "package_name": "com.example.diariodememorias"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIGwMUvWPYxIKswZh-ATo2NOBashkEu98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
