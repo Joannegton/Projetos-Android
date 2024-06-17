@@ -41,7 +41,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -49,11 +48,11 @@ import androidx.lifecycle.viewModelScope
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import com.example.compose.DiarioDeMemoriasTheme
 import com.example.compose.primaryContainerLight
 import com.example.diariodememorias.models.Memoria
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
+import com.example.diariodememorias.util.Resultado
 import com.example.diariodememorias.viewModel.MemoriaViewModel
 import kotlinx.coroutines.launch
 
@@ -223,21 +222,35 @@ fun AddMemoriaScreen(
         confirmButton = {
             Botao(
                 onClick = {
+                    // Iniciamos uma nova coroutine no escopo do ViewModel
                     viewModel.viewModelScope.launch {
+                        // Verificamos se todos os campos foram preenchidos
                         if (titulo.isNotEmpty() && descricao.isNotEmpty() && imagemUri != null) {
                             val usuarioId = viewModel.getUsuarioId() ?: return@launch
                             val parceiroId = viewModel.getParceiroId() ?: return@launch
-                            viewModel.adicionarMemoria(
-                                Memoria(
-                                    title = titulo,
-                                    description = descricao,
-                                    imageUri = imagemUri.toString(),
-                                    usuarioId = usuarioId,
-                                    compartilhadoCom = parceiroId
-                                )
-                            )
-                            viewModel.enviarMidia(imagemUri!!)
-                            onDismiss()
+
+                            // upload da imagem e obtemos a URL de download
+                            when (val result = viewModel.enviarMidia(imagemUri!!)) {
+                                // Se o upload for bem-sucedido, criamos e adicionamos a memória
+                                is Resultado.Sucesso -> {
+                                    val downloadUrl = result.data
+                                    viewModel.adicionarMemoria(
+                                        Memoria(
+                                            title = titulo,
+                                            description = descricao,
+                                            imageUri = downloadUrl,
+                                            usuarioId = usuarioId,
+                                            compartilhadoCom = parceiroId
+                                        )
+                                    )
+                                    onDismiss()
+                                }
+                                // Se o upload falhar, tratamos a exceção
+                                is Resultado.Falha -> {
+                                    val exception = result.exception
+                                    Log.e("TAG", "Erro ao fazer upload da imagem", exception)
+                                }
+                            }
                         } else {
                             Log.i("TAG", "Preencha todos os campos")
                         }
