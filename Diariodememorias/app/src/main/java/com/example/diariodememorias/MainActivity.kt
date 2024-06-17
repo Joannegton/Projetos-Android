@@ -3,6 +3,7 @@ package com.example.diariodememorias
 import Login
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +35,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    var showDialog by mutableStateOf(false)
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +62,14 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate("contagemRegressiva")
                             })
                         }
-                        composable("diary") { DiaryApp(memoriaVielModel) }
+                        composable("diary") {
+                            DiaryApp(
+                                memoriaVielModel,
+                                showDialog = showDialog, // Passa o estado
+                                onOpenViewer = { showDialog = true }, // Função para abrir o visualizador
+                                onCloseViewer = { showDialog = false } // Função para fechar o visualizador
+                            )
+                        }
                         composable("livro10motivos") { LivroDeMemoriasScreen(navController) }
                         composable("contagemRegressiva") { ContagemRegressiva(navController) }
                     }
@@ -66,6 +79,17 @@ class MainActivity : ComponentActivity() {
             }
 
         }
+
+        // Configura o callback para o botão de voltar
+        onBackPressedDispatcher.addCallback(this){
+            if (showDialog) {
+                showDialog = false // Fecha o visualizador
+            } else {
+                finish() // Finaliza a Activity se o visualizador não estiver visível
+            }
+        }
     }
+
+
 }
 

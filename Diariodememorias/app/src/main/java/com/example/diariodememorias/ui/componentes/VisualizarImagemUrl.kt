@@ -7,69 +7,76 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.VectorProperty
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.ImagePainter
+import kotlin.math.roundToInt
 
 @Composable
 fun VisualizadorImagemUrl(
     imagePainter: ImagePainter,
-    dialog: Boolean,
-    onDialogDismiss: () -> Unit
+    dialogVisivel: Boolean,
+    onDialogDismiss: () -> Unit,
 ){
-    if (dialog) {
+    var scale by remember { mutableFloatStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) } // offset representa um deslocamento em relação à posição original de um elemento na tela.
+
+    if (dialogVisivel) {
         Box(modifier = Modifier
             .fillMaxSize()
             .background(Color(0x99000000))
+            .pointerInput(Unit) {//permite detectar gestos de transformação, como zoom e pan.
+                detectTransformGestures { _, pan, zoom, _ -> //detecta gestos de transformação e atualiza os estados scale e offset de acordo.
+                    scale = (scale * zoom).coerceAtLeast(1f)
+                    if (scale > 1f) {
+                        // Calcula o novo offset, restringindo o movimento para que a imagem não saia da tela
+                        val maxX = (scale - 1f) * imagePainter.intrinsicSize.width / 2
+                        val maxY = (scale - 1f) * imagePainter.intrinsicSize.height / 2
+                        offset = Offset(
+                            x = (offset.x + pan.x).coerceIn(-maxX, maxX),
+                            y = (offset.y + pan.y).coerceIn(-maxY, maxY)
+                        )
+                    }
+                }
+            }
         ) {
 
-            var scale = remember { mutableStateOf(1f) }
-            var offsetX = remember { mutableStateOf(0f) }
-            var offsetY = remember { mutableStateOf(0f) }
-            var transformOrigin = remember { mutableStateOf(TransformOrigin(0.5f, 0.5f)) }
+
 
             Image(
                 painter = imagePainter,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
-                    .graphicsLayer( //modificador de escala
-                        scaleX = scale.value,
-                        scaleY = scale.value,
-                        translationX = offsetX.value,
-                        translationY = offsetY.value,
-                        transformOrigin = transformOrigin.value
-                    )
-                    .pointerInput(Unit){//permite lidar com eventos de entrada do ponteiro, como toques na tela.
-                        detectTransformGestures { centroid, _, zoom, pan -> //permite detectar gestos de transformação, como pinça para zoom.
-                            scale.value *= zoom
-                            offsetX.value += pan
-                            offsetY.value += pan
-                            transformOrigin.value = TransformOrigin(centroid.x / size.width, centroid.y / size.height)
-                        }
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            offsetX.value += dragAmount.x
-                        }
+                    .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) } // Aplica o offset calculado
+                    .graphicsLayer { // Aplica a escala à imagem
+                        scaleX = scale
+                        scaleY = scale
                     }
-
             )
 
+            // Botão para fechar o visualizador
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "fechar",

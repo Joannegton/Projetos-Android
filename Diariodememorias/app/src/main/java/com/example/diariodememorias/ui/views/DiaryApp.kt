@@ -60,20 +60,23 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoilApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DiaryApp(viewModel: MemoriaViewModel) {
+fun DiaryApp(
+    viewModel: MemoriaViewModel,
+    showDialog: Boolean, // Recebe o estado
+    onOpenViewer: () -> Unit, // Função para abrir o visualizador
+    onCloseViewer: () -> Unit // Função para fechar o visualizador
+) {
     val memories by viewModel.memories.collectAsState()
     var showAddMemoryDialog by remember { mutableStateOf(false) }
+
+    val initialImagePainter =
+        rememberImagePainter("https://s2-techtudo.glbimg.com/SSAPhiaAy_zLTOu3Tr3ZKu2H5vg=/0x0:1024x609/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2022/c/u/15eppqSmeTdHkoAKM0Uw/dall-e-2.jpg")
+    var imagePaint by remember { mutableStateOf(initialImagePainter) }
 
     // Atualiza as memórias ao iniciar o Composable
     LaunchedEffect(Unit) {
         viewModel.pegarMemorias()
     }
-
-    var showDialog by remember { mutableStateOf(false) }
-
-    val initialImagePainter = rememberImagePainter("https://s2-techtudo.glbimg.com/SSAPhiaAy_zLTOu3Tr3ZKu2H5vg=/0x0:1024x609/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2022/c/u/15eppqSmeTdHkoAKM0Uw/dall-e-2.jpg")
-    var imagePaint by remember { mutableStateOf(initialImagePainter) }
-
 
     Scaffold(
         floatingActionButton = {
@@ -85,13 +88,12 @@ fun DiaryApp(viewModel: MemoriaViewModel) {
         }
     ) {
         Box {
-
             Column(Modifier.fillMaxSize()) {
                 LazyColumn {
                     items(memories) { memory ->
-                        CardMemoria(memory) { imgPainter, show ->
-                            imagePaint = imgPainter
-                            showDialog = show
+                        CardMemoria(memory){
+                            imagePaint = it
+                            onOpenViewer()
                         }
                     }
                 }
@@ -102,18 +104,23 @@ fun DiaryApp(viewModel: MemoriaViewModel) {
                     )
                 }
             }
+
+            // Exibe o VisualizadorImagemUrl se houver uma imagem selecionada
             VisualizadorImagemUrl(
                 imagePainter = imagePaint,
-                dialog = showDialog,
-                onDialogDismiss = { showDialog = false }
+                dialogVisivel = showDialog,
+                onDialogDismiss = {
+                    onCloseViewer()
+                }
             )
+
         }
     }
 }
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun CardMemoria(memory: Memoria, onImagePainter: (ImagePainter, Boolean) -> Unit) {
+fun CardMemoria(memory: Memoria, onOpenViewer: (ImagePainter) -> Unit) {
     val imagePainter = rememberImagePainter(memory.imageUri)
 
     Card(
@@ -150,7 +157,7 @@ fun CardMemoria(memory: Memoria, onImagePainter: (ImagePainter, Boolean) -> Unit
                     .fillMaxWidth()
                     .height(200.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable { onImagePainter(imagePainter, true) }
+                    .clickable { onOpenViewer(imagePainter) }
             )
         }
     }
