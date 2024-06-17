@@ -19,7 +19,6 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun VisualizadorImagemUrl(
     imagePainter: ImagePainter,

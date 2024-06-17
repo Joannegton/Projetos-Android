@@ -25,13 +25,6 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
     private val _isCarregando = MutableStateFlow(false)
     val isCarregando: StateFlow<Boolean> = _isCarregando
 
-    // Estado para armazenar o resultado do envio de mídia
-    private val _downloadUriResult = MutableStateFlow<Resultado<String>?>(null)
-    val downloadUriResult: StateFlow<Resultado<String>?> = _downloadUriResult
-
-    // Estado para armazenar o resultado da adição de memória
-    private val _addMemoriaResult = MutableStateFlow<Result<Unit>?>(null)
-    val addMemoriaResult: StateFlow<Result<Unit>?> = _addMemoriaResult
 
     // Estado para armazenar a mensagem de erro
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -71,9 +64,7 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
         viewModelScope.launch {
             _isCarregando.value = true
             try {
-                val result = repository.adicionarMemoria(memoria)
-                Log.i("TAG", "adicionarMemoria: $result")
-                _addMemoriaResult.value = result
+                repository.adicionarMemoria(memoria)
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             } finally {

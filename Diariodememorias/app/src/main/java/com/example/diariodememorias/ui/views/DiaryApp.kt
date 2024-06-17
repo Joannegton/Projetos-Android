@@ -52,10 +52,12 @@ import com.example.compose.primaryContainerLight
 import com.example.diariodememorias.models.Memoria
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
+import com.example.diariodememorias.ui.componentes.VisualizadorImagemUrl
 import com.example.diariodememorias.util.Resultado
 import com.example.diariodememorias.viewModel.MemoriaViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoilApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DiaryApp(viewModel: MemoriaViewModel) {
@@ -67,22 +69,28 @@ fun DiaryApp(viewModel: MemoriaViewModel) {
         viewModel.pegarMemorias()
     }
 
+    var showDialog by remember { mutableStateOf(false) }
+
+    val initialImagePainter = rememberImagePainter("https://s2-techtudo.glbimg.com/SSAPhiaAy_zLTOu3Tr3ZKu2H5vg=/0x0:1024x609/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2022/c/u/15eppqSmeTdHkoAKM0Uw/dall-e-2.jpg")
+    var imagePaint by remember { mutableStateOf(initialImagePainter) }
+
+
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { showAddMemoryDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Adicionar Memória")
+            if (!showDialog) {
+                FloatingActionButton(onClick = { showAddMemoryDialog = true }) {
+                    Icon(Icons.Default.Add, contentDescription = "Adicionar Memória")
+                }
             }
         }
     ) {
         Box {
-            var showDialog by remember { mutableStateOf(false) }
-            var imagePainter = rememberImagePainter("https://example.com/your-image.jpg")
 
             Column(Modifier.fillMaxSize()) {
                 LazyColumn {
                     items(memories) { memory ->
                         CardMemoria(memory) { imgPainter, show ->
-                            imagePainter = imgPainter
+                            imagePaint = imgPainter
                             showDialog = show
                         }
                     }
@@ -95,7 +103,7 @@ fun DiaryApp(viewModel: MemoriaViewModel) {
                 }
             }
             VisualizadorImagemUrl(
-                imagePainter = imagePainter,
+                imagePainter = imagePaint,
                 dialog = showDialog,
                 onDialogDismiss = { showDialog = false }
             )
@@ -274,30 +282,3 @@ fun AddMemoriaScreen(
     )
 }
 
-@Composable
-fun VisualizadorImagemUrl(
-    imagePainter: ImagePainter,
-    dialog: Boolean,
-    onDialogDismiss: () -> Unit
-) {
-    if (dialog) {
-        AlertDialog(
-            onDismissRequest = onDialogDismiss,
-            text = {
-                Image(
-                    painter = imagePainter,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            confirmButton = {
-                Botao(
-                    onClick = onDialogDismiss,
-                    texto = "Fechar",
-                    fonteTexto = 14,
-                    largura = 134
-                )
-            }
-        )
-    }
-}
