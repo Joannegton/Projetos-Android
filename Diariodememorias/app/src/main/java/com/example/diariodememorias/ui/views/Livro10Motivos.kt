@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.compose.tertiaryDark
 import com.example.diariodememorias.R
-import com.example.diariodememorias.funcoes.criarLivroDeMemorias
+import com.example.diariodememorias.util.criarLivroDeMemorias
 import com.example.diariodememorias.models.Livro
 import com.example.diariodememorias.models.Pagina
 import com.example.diariodememorias.ui.componentes.VisualizadorImagem

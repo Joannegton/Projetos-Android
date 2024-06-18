@@ -8,7 +8,6 @@ sealed class Resultado<out T> {
     // `T` é um tipo genérico, o que significa que pode ser qualquer tipo. Isso torna a classe `Success` flexível
     // para conter qualquer tipo de dados.
     data class Sucesso<out T>(val data: T) : Resultado<T>()
-
     // A classe `Falha` representa um caso de falha e contém a exceção que causou a falha.
     // Isso é útil para entender o que deu errado durante a operação.
     data class Falha(val exception: Exception) : Resultado<Nothing>()

@@ -1,9 +1,11 @@
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -109,32 +112,44 @@ fun Login(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
         // Botão de Login
         Botao(
             onClick = {
-            // Chame a função de login no ViewModel quando o botão for clicado
+            // Chama a função de login no ViewModel quando o botão for clicado
             viewModel.entrar(email, senha)
             },
             texto = "Entrar"
         )
 
-        // Observe o estado de login e reaja às mudanças
-        when (val resultado = loginState) {
-            is ResultadoLogin -> {
-                if (resultado.sucesso) {
-                    // Se o login for bem-sucedido, chame a função onLoginSuccess
-                    onLoginSuccess()
-                } else {
-                    // Se o login falhar, mostre uma mensagem Toast
-                    Toast.makeText(context, "Não sabe, não sabeeee", Toast.LENGTH_SHORT).show()
-                }
+        Spacer(modifier = Modifier.padding(10.dp))
+
+        Row (horizontalArrangement = Arrangement.Center ,modifier = Modifier.fillMaxWidth()){
+            Text(text = "Não possui conta?", fontSize = 18.sp)
+            Text(
+                text = "Cadastre-se",
+                color = secondaryLight,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 5.dp)
+            )
+        }
+
+    }
+    // Observe o estado de login e reaja às mudanças
+    LaunchedEffect(loginState?.sucesso) { // A chave muda apenas quando o sucesso muda
+        if (loginState is ResultadoLogin) {
+            if (loginState!!.sucesso) {
+                onLoginSuccess()
+            } else{
+                Log.i("Tag", loginState!!.msg!!)
+                Toast.makeText(context, loginState!!.msg, Toast.LENGTH_SHORT).show()
             }
+            viewModel.resetEstadoLogin()
         }
     }
 }
 
 @Preview
 @Composable
-private fun view() {
+private fun View() {
     val viewModel: LoginViewModel = hiltViewModel()
-
     Login(viewModel = viewModel, onLoginSuccess = {})
 
 

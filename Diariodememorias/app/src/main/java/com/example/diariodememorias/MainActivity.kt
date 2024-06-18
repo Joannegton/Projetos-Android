@@ -53,8 +53,7 @@ class MainActivity : ComponentActivity() {
                     val loginViewModel: LoginViewModel = hiltViewModel()
                     val memoriaVielModel: MemoriaViewModel = hiltViewModel()
 
-
-                    NavHost(navController = navController, startDestination = "diary", modifier = Modifier.padding(it)) {
+                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
                         composable("login") {
                             Login(loginViewModel, onLoginSuccess = {
                                 navController.navigate("contagemRegressiva")

@@ -1,5 +1,7 @@
 package com.example.diariodememorias.viewModel
 
+import android.util.Log
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import com.example.diariodememorias.repositorio.LoginRepositorio
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,13 +13,22 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(private val repositorio: LoginRepositorio) : ViewModel() {
 
     private val _loginState = MutableStateFlow<ResultadoLogin?>(null)
-    val loginState: StateFlow<ResultadoLogin?> = _loginState
+    var loginState: StateFlow<ResultadoLogin?> = _loginState
 
     fun entrar(email: String, senha: String) {
-        repositorio.entrar(email, senha+"dias"){sucesso, erro ->
-            _loginState.value = ResultadoLogin(sucesso, erro)
+        if (email.isNotEmpty() || senha.isNotEmpty()) {
+            repositorio.entrar(email, senha+"dias"){sucesso, msg ->
+                _loginState.value = ResultadoLogin(sucesso, msg)
+            }
+        } else {
+            _loginState.value = ResultadoLogin(false, "Preencha todos os campos")
         }
     }
+
+    fun resetEstadoLogin() {
+        _loginState.value = null
+    }
+
 }
 
-data class ResultadoLogin(val sucesso: Boolean, val erro: String?)
+data class ResultadoLogin(val sucesso: Boolean, val msg: String?)

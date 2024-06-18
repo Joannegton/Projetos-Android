@@ -1,5 +1,6 @@
 package com.example.diariodememorias.repositorio
 
+import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -16,7 +17,7 @@ class LoginRepositorio @Inject constructor() {
                 if (task.isSuccessful) {
                     resultado(true, null)
                 } else {
-                    resultado(false, task.exception?.message)
+                    resultado(false, "Email ou senha incorretos")
                 }
             }
     }

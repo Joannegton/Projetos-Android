@@ -1,7 +1,11 @@
-package com.example.diariodememorias.funcoes
+package com.example.diariodememorias.util
 
-import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import com.example.diariodememorias.R
 import com.example.diariodememorias.models.Livro
 import com.example.diariodememorias.models.Memoria
@@ -11,7 +15,10 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import com.google.type.Date
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.UUID
 import kotlin.coroutines.resume
 
@@ -76,62 +83,6 @@ fun adicionarMemoria(memoria: Memoria, usuarioId: String, compartilhadoCom: Stri
 }
 
 
-fun pegarMemorias(usuarioId: String, parceiroId: String?, resultado: (List<Memoria>) -> Unit){
-    db.collection("memories")
-        .whereIn("compartilhadoCom", listOf(null, parceiroId))
-        .orderBy("timestamp", Query.Direction.DESCENDING)
-        .get()
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val memorias = task.result?.documents?.map { it.toObject(Memoria::class.java) }?.filterNotNull() ?: listOf()
-                resultado(memorias)
-            }
-        }
-    db.collection("memories")
-        .orderBy("timestamp", Query.Direction.DESCENDING)
-        .get()
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val memorias = task.result?.documents?.map { it.toObject(Memoria::class.java) }?.filterNotNull() ?: listOf()
-                resultado(memorias)
-            }
-        }
-}
-
-// Função para enviar mídia para o Firebase
-fun enviarMidia(uri: Uri, resultado: (String) -> Unit){
-    // Cria uma referência para o arquivo no Firebase Storage
-    val storageRef = Firebase.storage.reference.child("media/${UUID.randomUUID()}")
-    // Inicia o upload do arquivo
-    val envioTask = storageRef.putFile(uri)
-
-    envioTask.continueWithTask { task ->
-        // Se o upload falhou, lança a exceção
-        if (!task.isSuccessful){
-            task.exception?.let { throw it }
-        }
-        // Se o upload foi bem-sucedido, obtém a URL de download do arquivo
-        storageRef.downloadUrl
-    }.addOnCompleteListener { task ->
-        // Se a obtenção da URL de download foi bem-sucedida, retorna a URL
-        // Se falhou, retorna "null"
-        if (task.isSuccessful){
-            val downloadUri = task.result
-            resultado(downloadUri?.toString() ?: "null")
-        } else{
-            resultado("null")
-        }
-    }
-}
-
-suspend fun fetchMemories(usuarioId: String, parceiroId: String?): List<Memoria> {
-    return suspendCancellableCoroutine { continuacao ->
-        pegarMemorias(usuarioId, parceiroId){listaMemorias ->
-            continuacao.resume(listaMemorias)
-        }
-    }
-}
-
 fun criarLivroDeMemorias(onResult: (Livro) -> Unit) {
     val paginas = listOf(
         Pagina(
@@ -191,3 +142,27 @@ fun criarLivroDeMemorias(onResult: (Livro) -> Unit) {
     onResult(livro)
 }
 
+// Extension Function
+fun String.removeWhiteSpace(): String {
+    return this.replace(" ", "")
+}
+
+// Constant
+const val REQUEST_CODE_CAMERA = 1001
+
+// Compose Helper
+@Composable
+fun CustomSpacer(size: Dp) {
+    Spacer(modifier = Modifier.height(size))
+}
+
+// Utility Function
+fun formatDate(date: Date): String {
+    val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return format.format(date)
+}
+
+// Network/Data Helper
+//fun convertResponseToDomain(response: NetworkResponse): DomainObject {
+//    return DomainObject(response.id, response.name)
+//}
