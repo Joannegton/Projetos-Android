@@ -10,5 +10,5 @@ sealed class Resultado<out T> {
     data class Sucesso<out T>(val data: T) : Resultado<T>()
     // A classe `Falha` representa um caso de falha e contém a exceção que causou a falha.
     // Isso é útil para entender o que deu errado durante a operação.
-    data class Falha(val exception: Exception) : Resultado<Nothing>()
+    data class Falha<out T>(val data: T) : Resultado<T>()
 }

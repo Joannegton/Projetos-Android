@@ -263,8 +263,8 @@ fun AddMemoriaScreen(
                                 }
                                 // Se o upload falhar, tratamos a exceção
                                 is Resultado.Falha -> {
-                                    val exception = result.exception
-                                    Log.e("TAG", "Erro ao fazer upload da imagem", exception)
+                                    val exception = result.data
+                                    Log.i("TAG", "Erro ao fazer upload da imagem $exception")
                                 }
                             }
                         } else {

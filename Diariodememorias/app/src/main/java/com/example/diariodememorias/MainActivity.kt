@@ -24,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.DiarioDeMemoriasTheme
+import com.example.diariodememorias.ui.views.Cadastro
 import com.example.diariodememorias.ui.views.ContagemRegressiva
 import com.example.diariodememorias.ui.views.DiaryApp
 import com.example.diariodememorias.ui.views.LivroDeMemoriasScreen
@@ -53,12 +54,13 @@ class MainActivity : ComponentActivity() {
                     val loginViewModel: LoginViewModel = hiltViewModel()
                     val memoriaVielModel: MemoriaViewModel = hiltViewModel()
 
-                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
+                    NavHost(navController = navController, startDestination = "cadastro", modifier = Modifier.padding(it)) {
                         composable("login") {
                             Login(loginViewModel, onLoginSuccess = {
                                 navController.navigate("contagemRegressiva")
                             })
                         }
+                        composable("cadastro"){ Cadastro(navController = navController, viewModel = loginViewModel)}
                         composable("diary") {
                             DiaryApp(
                                 memoriaVielModel,

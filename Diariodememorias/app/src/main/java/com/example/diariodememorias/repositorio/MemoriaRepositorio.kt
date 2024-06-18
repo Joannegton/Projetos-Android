@@ -90,7 +90,7 @@ class MemoriaRepositorio @Inject constructor() {
             val downloadUri = storageRef.downloadUrl.await()
             Resultado.Sucesso(downloadUri.toString())
         } catch (e: Exception) {
-            Resultado.Falha(e)
+            Resultado.Falha(e.message.toString())
         }
     }
 }
