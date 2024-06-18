@@ -163,6 +163,7 @@ fun CardMemoria(memory: Memoria, onOpenViewer: (ImagePainter) -> Unit) {
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun AddMemoriaScreen(
     viewModel: MemoriaViewModel,
@@ -241,8 +242,8 @@ fun AddMemoriaScreen(
                     viewModel.viewModelScope.launch {
                         // Verificamos se todos os campos foram preenchidos
                         if (titulo.isNotEmpty() && descricao.isNotEmpty() && imagemUri != null) {
-                            val usuarioId = viewModel.getUsuarioId() ?: return@launch
-                            val parceiroId = viewModel.getParceiroId() ?: return@launch
+                            val usuarioId = viewModel.getUsuarioId()
+                            val parceiroId = viewModel.getParceiroId()
 
                             // upload da imagem e obtemos a URL de download
                             when (val result = viewModel.enviarMidia(imagemUri!!)) {
