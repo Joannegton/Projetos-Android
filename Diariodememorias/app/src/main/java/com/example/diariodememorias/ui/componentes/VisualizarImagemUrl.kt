@@ -3,7 +3,7 @@ package com.example.diariodememorias.ui.componentes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,10 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.VectorProperty
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -38,45 +35,53 @@ fun VisualizadorImagemUrl(
     imagePainter: ImagePainter,
     dialogVisivel: Boolean,
     onDialogDismiss: () -> Unit,
-){
-    var scale by remember { mutableFloatStateOf(1f) }
-    var offset by remember { mutableStateOf(Offset.Zero) } // offset representa um deslocamento em relação à posição original de um elemento na tela.
+) {
+    var scale by remember { mutableFloatStateOf(2f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
 
     if (dialogVisivel) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0x99000000))
-            .pointerInput(Unit) {//permite detectar gestos de transformação, como zoom e pan.
-                detectTransformGestures { _, pan, zoom, _ -> //detecta gestos de transformação e atualiza os estados scale e offset de acordo.
-                    scale = (scale * zoom).coerceAtLeast(1f)
-                    if (scale > 1f) {
-                        // Calcula o novo offset, restringindo o movimento para que a imagem não saia da tela
-                        val maxX = (scale - 1f) * imagePainter.intrinsicSize.width / 2
-                        val maxY = (scale - 1f) * imagePainter.intrinsicSize.height / 2
-                        offset = Offset(
-                            x = (offset.x + pan.x).coerceIn(-maxX, maxX),
-                            y = (offset.y + pan.y).coerceIn(-maxY, maxY)
-                        )
-                    }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0x99000000))
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onDoubleTap = {
+                            if (scale > 1f) {
+                                scale = 1f
+                                offset = Offset.Zero
+                            } else{
+                                scale = 2f
+                            }
+                        }
+                    )
                 }
-            }
         ) {
-
-
-
             Image(
                 painter = imagePainter,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
-                    .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) } // Aplica o offset calculado
-                    .graphicsLayer { // Aplica a escala à imagem
+                    .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
+                    .graphicsLayer {
                         scaleX = scale
                         scaleY = scale
                     }
+                    .pointerInput(Unit) {
+                        detectTransformGestures { _, pan, zoom, _ ->
+                            scale = (scale * zoom).coerceAtLeast(1f)
+                            if (scale > 1f) {
+                                val maxX = (scale - 1f) * imagePainter.intrinsicSize.width / 2
+                                val maxY = (scale - 1f) * imagePainter.intrinsicSize.height / 2
+                                offset = Offset(
+                                    x = (offset.x + pan.x).coerceIn(-maxX, maxX),
+                                    y = (offset.y + pan.y).coerceIn(-maxY, maxY)
+                                )
+                            }
+                        }
+                    }
             )
 
-            // Botão para fechar o visualizador
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "fechar",
