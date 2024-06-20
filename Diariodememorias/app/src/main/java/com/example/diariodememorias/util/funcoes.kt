@@ -26,29 +26,7 @@ private val auth = Firebase.auth
 private val db = Firebase.firestore
 
 
-fun criarConta(email: String, senha: String, resultado: (Boolean, String?) -> Unit) {
-    auth.createUserWithEmailAndPassword(email, senha)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val usuario = auth.currentUser
-                val usuarioRef = db.collection("usuarios").document(usuario?.uid.toString())
-                val usuarioData = hashMapOf(
-                    "email" to email,
-                    "senha" to senha,
-                    "parceiroId" to null
-                )
-                usuarioRef.set(usuarioData)
-                    .addOnSuccessListener {
-                        resultado(true, null)
-                    }
-                    .addOnFailureListener{e ->
-                        resultado(false, e.message)
-                    }
-            } else {
-                resultado(false, task.exception?.message)
-            }
-        }
-}
+
 
 fun conectarparceiro(usuarioId: String?, parceiroId: String, resultado: (Boolean, String?) -> Unit){
     val userRef = db.collection("usuarios").document(usuarioId.toString())

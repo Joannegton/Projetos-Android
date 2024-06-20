@@ -1,6 +1,5 @@
 package com.example.diariodememorias.ui.views
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -65,6 +64,7 @@ fun Cadastro(navController: NavController, viewModel: LoginViewModel) {
         EntradaTexto(
             texto = senha,
             onValueChange = { senha = it },
+            isSenha = true,
             label = "Senha"
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -73,6 +73,7 @@ fun Cadastro(navController: NavController, viewModel: LoginViewModel) {
         EntradaTexto(
             texto = confirmarSenha,
             onValueChange = { confirmarSenha = it },
+            isSenha = true,
             label = "Confirmar Senha"
         )
 
@@ -105,16 +106,5 @@ fun Cadastro(navController: NavController, viewModel: LoginViewModel) {
                 ).show()
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun View() {
-    DiarioDeMemoriasTheme {
-        val navController = rememberNavController()
-        val viewModel = LoginViewModel(repositorio = LoginRepositorio())
-        Cadastro(navController, viewModel)
-
     }
 }

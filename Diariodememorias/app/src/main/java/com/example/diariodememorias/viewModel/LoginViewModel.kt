@@ -21,7 +21,7 @@ class LoginViewModel @Inject constructor(private val repositorio: LoginRepositor
 
     fun entrar(email: String, senha: String) {
         if (email.isNotEmpty() || senha.isNotEmpty()) {
-            repositorio.entrar(email, senha + "dias") { sucesso, msg ->
+            repositorio.entrar(email, senha) { sucesso, msg ->
                 _loginState.value = ResultadoLogin(sucesso, msg)
             }
         } else {

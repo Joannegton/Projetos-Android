@@ -7,27 +7,24 @@ import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.DiarioDeMemoriasTheme
+import com.example.diariodememorias.ui.componentes.TopAppBarMaster
 import com.example.diariodememorias.ui.views.Cadastro
 import com.example.diariodememorias.ui.views.ContagemRegressiva
 import com.example.diariodememorias.ui.views.DiaryApp
 import com.example.diariodememorias.ui.views.LivroDeMemoriasScreen
+import com.example.diariodememorias.viewModel.ConexaoViewModel
 import com.example.diariodememorias.viewModel.LoginViewModel
 import com.example.diariodememorias.viewModel.MemoriaViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,17 +33,16 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var showDialog by mutableStateOf(false)
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
             DiarioDeMemoriasTheme {
+                var conexaoViewModel: ConexaoViewModel = hiltViewModel()
+
                 Scaffold(
-                    topBar = {
-                        TopAppBar(title = { Text("Diário de Memórias", fontSize = 27.sp) }, colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.White))
-                    },
+                    topBar = { TopAppBarMaster(conexaoViewModel) },
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = Color.Black
                 ){
@@ -54,12 +50,8 @@ class MainActivity : ComponentActivity() {
                     val loginViewModel: LoginViewModel = hiltViewModel()
                     val memoriaVielModel: MemoriaViewModel = hiltViewModel()
 
-                    NavHost(navController = navController, startDestination = "cadastro", modifier = Modifier.padding(it)) {
-                        composable("login") {
-                            Login(loginViewModel, onLoginSuccess = {
-                                navController.navigate("contagemRegressiva")
-                            })
-                        }
+                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
+                        composable("login") { Login(loginViewModel, onLoginSuccess = {navController.navigate("diary")})}
                         composable("cadastro"){ Cadastro(navController = navController, viewModel = loginViewModel)}
                         composable("diary") {
                             DiaryApp(
@@ -91,4 +83,3 @@ class MainActivity : ComponentActivity() {
 
 
 }
-

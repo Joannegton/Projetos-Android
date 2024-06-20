@@ -18,7 +18,6 @@ import javax.inject.Inject
 class MemoriaRepositorio @Inject constructor() {
     private val db = Firebase.firestore
     private val storage = Firebase.storage
-    private val auth = FirebaseAuth.getInstance()
 
     // Função para buscar o ID do usuário a partir do Firebase Authentication
     fun getUsuarioId(): String {

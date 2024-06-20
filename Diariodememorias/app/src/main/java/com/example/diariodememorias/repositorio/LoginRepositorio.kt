@@ -2,7 +2,9 @@ package com.example.diariodememorias.repositorio
 
 import android.util.Log
 import com.example.diariodememorias.models.Usuario
+import com.example.diariodememorias.util.GerenciadorDeSessao
 import com.example.diariodememorias.util.Resultado
+import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -11,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @ViewModelScoped
-class LoginRepositorio @Inject constructor() {
+class LoginRepositorio @Inject constructor(private val gerenciamentoSessao: GerenciadorDeSessao) {
 
     private val auth = Firebase.auth
     private val db = Firebase.firestore
@@ -20,7 +22,12 @@ class LoginRepositorio @Inject constructor() {
         auth.signInWithEmailAndPassword(email, senha)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    resultado(true, null)
+                    val uid = auth.currentUser?.uid
+                    uid?.let {
+                    gerenciamentoSessao.salvarUid(it)
+                        Log.d("TAG", "Uid: $it")
+                        resultado(true, null)
+                    } ?: resultado(false, "Erro ao obter UID")
                 } else {
                     resultado(false, "Email ou senha incorretos")
                 }

@@ -12,14 +12,17 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.compose.secondaryContainerDark
 import com.example.compose.secondaryContainerLight
@@ -34,14 +37,21 @@ fun EntradaTexto(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
     isSenha: Boolean = false,
+    linhaUnica: Boolean = true,
+    obrigatorio: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val senhaVisivel = remember { mutableStateOf(false) }
+    var erro by remember { mutableStateOf(obrigatorio) }
 
     OutlinedTextField(
         value = texto,
-        onValueChange = onValueChange,
+        onValueChange = {
+            onValueChange(it)
+            erro = it.isBlank()},
         label = { Text(text = label) },
+        isError = erro,
+        singleLine = linhaUnica,
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = secondaryDark,
             unfocusedContainerColor = secondaryContainerLight,
@@ -71,4 +81,7 @@ fun EntradaTexto(
             imeAction = imeAction
         )
     )
+    if (erro) {
+        Text("Este campo é obrigatório", textAlign = TextAlign.Center, color = Color.Red, modifier = Modifier.fillMaxWidth().padding(2.dp))
+    }
 }

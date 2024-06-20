@@ -103,7 +103,7 @@ fun Login(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
             onValueChange = {senha = it},
             label = "Senha",
             isSenha = true,
-            keyboardType = KeyboardType.NumberPassword,
+            keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         )
 

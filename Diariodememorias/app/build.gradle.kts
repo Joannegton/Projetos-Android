@@ -97,5 +97,5 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
 
     implementation ("androidx.compose.material:material-icons-extended:1.6.8")
-
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }
