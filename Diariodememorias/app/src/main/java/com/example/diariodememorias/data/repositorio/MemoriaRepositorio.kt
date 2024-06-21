@@ -30,18 +30,19 @@ class MemoriaRepositorio @Inject constructor() {
 
             val memoriasCompartilhadas = compartilhadasQuery.documents.mapNotNull { it.toObject(
                 Memoria::class.java) }
+            memoriasCompartilhadas
 
-            val todasAsMemoriasQuery = db.collection("memories")
-                .whereEqualTo("usuarioId", usuarioId)
-                //.orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .await()
-
-            val todasAsMemorias = todasAsMemoriasQuery.documents.mapNotNull { it.toObject(Memoria::class.java) }
-
-            val todasMemorias = (memoriasCompartilhadas + todasAsMemorias).distinctBy { it.timestamp }
-
-            todasMemorias
+//            val todasAsMemoriasQuery = db.collection("memories")
+//                .whereEqualTo("usuarioId", usuarioId)
+//                //.orderBy("timestamp", Query.Direction.DESCENDING)
+//                .get()
+//                .await()
+//
+//            val todasAsMemorias = todasAsMemoriasQuery.documents.mapNotNull { it.toObject(Memoria::class.java) }
+//
+//            val todasMemorias = (memoriasCompartilhadas + todasAsMemorias).distinctBy { it.timestamp }
+//
+//            todasMemorias
         } catch (e: Exception) {
             Log.e("TAG", "Error fetching memories", e)
             emptyList()

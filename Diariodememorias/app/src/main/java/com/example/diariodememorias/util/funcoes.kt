@@ -27,7 +27,6 @@ private val db = Firebase.firestore
 
 
 
-
 fun conectarparceiro(usuarioId: String?, parceiroId: String, resultado: (Boolean, String?) -> Unit){
     val userRef = db.collection("usuarios").document(usuarioId.toString())
     val parceiroRef = db.collection("usuarios").document(parceiroId)

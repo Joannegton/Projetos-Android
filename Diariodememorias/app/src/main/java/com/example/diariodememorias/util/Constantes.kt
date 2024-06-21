@@ -3,5 +3,5 @@ package com.example.diariodememorias.util
 import androidx.compose.ui.unit.sp
 
 object Constantes {
-    val TITULO = 25.sp
+    val USUARIOId = "mWOnWAQ6zGhgfzs7w0Wieii2ewc2"
 }
