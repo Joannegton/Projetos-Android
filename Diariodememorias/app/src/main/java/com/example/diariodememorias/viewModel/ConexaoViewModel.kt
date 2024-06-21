@@ -1,5 +1,6 @@
 package com.example.diariodememorias.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diariodememorias.repositorio.ConexaoRepositorio
@@ -20,8 +21,10 @@ class ConexaoViewModel @Inject constructor(private val repositorio: ConexaoRepos
             _conexaoState.value = ConexaoState.Loading
             val resultado = repositorio.conectarParceiro(usuarioId, emailParceiro)
             _conexaoState.value = if (resultado.isSuccess) {
+                Log.i("tag", "deu certo")
                 ConexaoState.Success
             } else {
+                Log.i("tag", "deu errado")
                 ConexaoState.Error(resultado.exceptionOrNull()?.message)
             }
         }

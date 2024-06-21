@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.diariodememorias.viewModel.ConexaoState
@@ -42,6 +43,7 @@ fun TopAppBarMaster(viewModel: ConexaoViewModel, viewModel2: GerenciamentoSessao
     var mostrarDialog by remember { mutableStateOf(false) }
     val conexaoState by viewModel.conexaoState.collectAsState()
 
+    val context = LocalContext.current
     TopAppBar(
         title = {
             Row(
@@ -68,7 +70,6 @@ fun TopAppBarMaster(viewModel: ConexaoViewModel, viewModel2: GerenciamentoSessao
                             ConectarParceiroDialog(
                                 onConfirm = { email ->
                                         viewModel.conectarParceiro(usuarioId, email)
-
                                 },
                                 onDismiss = { mostrarDialog = false }
                             )

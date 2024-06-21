@@ -14,10 +14,13 @@ class ConexaoRepositorio @Inject constructor() {
     private val db = Firebase.firestore
 
     suspend fun conectarParceiro(usuarioId: String, emailParceiro: String): Result<Unit> {
+        Log.d("conectarParceiro", "Função conectarParceiro chamada") // Log de depuração
+
         return try {
             val parceiroIdQuery = db.collection("usuarios")
-                .whereEqualTo("email", emailParceiro).get().await().documents[0]
-            val parceiroId = parceiroIdQuery.getString("uid") ?: return Result.failure(NoSuchElementException("Parceiro não encontrado."))
+                .whereEqualTo("email", emailParceiro).get().await()
+
+            val parceiroId = parceiroIdQuery.documents[0].id
 
             // Referências aos documentos do usuário e do parceiro
             val userRef = db.collection("usuarios").document(usuarioId)
@@ -29,8 +32,8 @@ class ConexaoRepositorio @Inject constructor() {
                 transacao.update(parceiroRef, "parceiroId", usuarioId)
             }.await() // Usando await() para lidar com a operação assíncrona
             Result.success(Unit) // Retorna sucesso sem dados específicos
-        } catch (e: FirebaseFirestoreException) {
-            Log.e("TAG", "Erro ao conectar parceiro: ${e.message}")
+        } catch (e: Exception) {
+            Log.e("tag", "Erro ao conectar parceiro: ${e.message}")
             Result.failure(e) // Retorna a exceção em caso de erro
         }
     }
