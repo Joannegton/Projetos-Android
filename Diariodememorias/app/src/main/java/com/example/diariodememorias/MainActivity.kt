@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
                 ){
 
 
-                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
+                    NavHost(navController = navController, startDestination = "diary", modifier = Modifier.padding(it)) {
                         composable("login") { Login(navController,loginViewModel, onLoginSuccess = {navController.navigate("diary")})}
                         composable("cadastro"){ Cadastro(navController = navController, viewModel = loginViewModel)}
                         composable("diary") {

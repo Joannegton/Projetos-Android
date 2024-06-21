@@ -4,7 +4,6 @@ import android.net.Uri
 import android.util.Log
 import com.example.diariodememorias.data.models.Memoria
 import com.example.diariodememorias.util.Resultado
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -20,29 +19,31 @@ class MemoriaRepositorio @Inject constructor() {
     private val storage = Firebase.storage
 
     // Função para buscar memórias do Firestore
-    suspend fun pegarMemorias(usuarioId: String, parceiroId: String): List<Memoria> {
+    suspend fun pegarMemorias(usuarioId: String = "mWOnWAQ6zGhgfzs7w0Wieii2ewc2", parceiroId: String = "kSNLqxAZrVVWfVEHe6HHl35fbDr1"): List<Memoria> {
         return try {
-            val compartilhadasQuery = db.collection("memories")
-                .whereIn("compartilhadoCom", listOf(usuarioId, parceiroId))
-               // .orderBy("timestamp", Query.Direction.DESCENDING) ta dando erro aqui
+            val queryUsuario = db.collection("memories")
+                .whereEqualTo("compartilhadoCom", usuarioId)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .await()
-
-            val memoriasCompartilhadas = compartilhadasQuery.documents.mapNotNull { it.toObject(
+            val memoriasUsuario = queryUsuario.documents.mapNotNull { it.toObject(
                 Memoria::class.java) }
-            memoriasCompartilhadas
 
-//            val todasAsMemoriasQuery = db.collection("memories")
-//                .whereEqualTo("usuarioId", usuarioId)
-//                //.orderBy("timestamp", Query.Direction.DESCENDING)
-//                .get()
-//                .await()
-//
-//            val todasAsMemorias = todasAsMemoriasQuery.documents.mapNotNull { it.toObject(Memoria::class.java) }
-//
-//            val todasMemorias = (memoriasCompartilhadas + todasAsMemorias).distinctBy { it.timestamp }
-//
-//            todasMemorias
+            val queryParceiro = db.collection("memories")
+                .whereEqualTo("compartilhadoCom", parceiroId)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .await()
+            val memoriasParceiro = queryParceiro.documents.mapNotNull {
+                it.toObject(Memoria::class.java)
+            }
+
+            val memoriasCompartilhadas = memoriasUsuario + memoriasParceiro
+
+
+            Log.i("tag", "memoriasCompartilhadas: ${memoriasCompartilhadas.size}")
+            memoriasCompartilhadas.distinctBy { it.timestamp }
+
         } catch (e: Exception) {
             Log.e("TAG", "Error fetching memories", e)
             emptyList()
