@@ -25,6 +25,7 @@ import com.example.diariodememorias.ui.views.ContagemRegressiva
 import com.example.diariodememorias.ui.views.DiaryApp
 import com.example.diariodememorias.ui.views.LivroDeMemoriasScreen
 import com.example.diariodememorias.viewModel.ConexaoViewModel
+import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.example.diariodememorias.viewModel.LoginViewModel
 import com.example.diariodememorias.viewModel.MemoriaViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,10 +40,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             DiarioDeMemoriasTheme {
-                var conexaoViewModel: ConexaoViewModel = hiltViewModel()
+                val conexaoViewModel: ConexaoViewModel = hiltViewModel()
+                val gerenciadorViewModel: GerenciamentoSessaoViewModel = hiltViewModel()
 
                 Scaffold(
-                    topBar = { TopAppBarMaster(conexaoViewModel) },
+                    topBar = { TopAppBarMaster(conexaoViewModel, gerenciadorViewModel) },
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = Color.Black
                 ){
@@ -51,11 +53,12 @@ class MainActivity : ComponentActivity() {
                     val memoriaVielModel: MemoriaViewModel = hiltViewModel()
 
                     NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
-                        composable("login") { Login(loginViewModel, onLoginSuccess = {navController.navigate("diary")})}
+                        composable("login") { Login(navController,loginViewModel, onLoginSuccess = {navController.navigate("diary")})}
                         composable("cadastro"){ Cadastro(navController = navController, viewModel = loginViewModel)}
                         composable("diary") {
                             DiaryApp(
                                 memoriaVielModel,
+                                gerenciadorViewModel,
                                 showDialog = showDialog, // Passa o estado
                                 onOpenViewer = { showDialog = true }, // Função para abrir o visualizador
                                 onCloseViewer = { showDialog = false } // Função para fechar o visualizador

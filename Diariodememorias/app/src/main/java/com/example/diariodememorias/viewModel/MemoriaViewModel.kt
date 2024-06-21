@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diariodememorias.models.Memoria
+import com.example.diariodememorias.repositorio.ConexaoRepositorio
 import com.example.diariodememorias.repositorio.MemoriaRepositorio
+import com.example.diariodememorias.util.GerenciadorDeSessao
 import com.example.diariodememorias.util.Resultado
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MemoriaViewModel @Inject constructor(private val repository: MemoriaRepositorio) :
+class MemoriaViewModel @Inject constructor(private val repository: MemoriaRepositorio, private val repositorio: GerenciadorDeSessao) :
     ViewModel() {
 
     // Estado para armazenar a lista de memórias
@@ -30,26 +32,15 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    fun getUsuarioId(): String {
-        // Aqui você pode adicionar a lógica para buscar o ID do usuário do banco de dados
-        // Supondo que você tenha uma função no seu repositório para buscar o ID do usuário
-        return repository.getUsuarioId()
-    }
-
-    suspend fun getParceiroId(): String {
-        // Aqui você pode adicionar a lógica para buscar o ID do parceiro do banco de dados
-        // Supondo que você tenha uma função no seu repositório para buscar o ID do parceiro
-        return repository.getParceiroId()
-    }
-
     // Função para buscar memórias, utilizando coroutines para operações assíncronas
     fun pegarMemorias() {
-        val usuarioId = getUsuarioId()
+        val usuarioId = repositorio.obterUidFlow()
+
         viewModelScope.launch {
-            val parceiroId = getParceiroId()
+            val parceiroId = repositorio.obterUidParceiro(usuarioId.toString())
             _isCarregando.value = true
             try {
-                val fetchedMemories = repository.pegarMemorias(usuarioId, parceiroId)
+                val fetchedMemories = repository.pegarMemorias(usuarioId.toString(), parceiroId.toString())
                 _memories.value = fetchedMemories
             } catch (e: Exception) {
                 _errorMessage.value = e.message

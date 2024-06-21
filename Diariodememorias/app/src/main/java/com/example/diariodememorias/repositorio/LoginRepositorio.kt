@@ -3,8 +3,6 @@ package com.example.diariodememorias.repositorio
 import android.util.Log
 import com.example.diariodememorias.models.Usuario
 import com.example.diariodememorias.util.GerenciadorDeSessao
-import com.example.diariodememorias.util.Resultado
-import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

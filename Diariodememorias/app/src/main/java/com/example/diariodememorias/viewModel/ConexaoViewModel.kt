@@ -26,6 +26,8 @@ class ConexaoViewModel @Inject constructor(private val repositorio: ConexaoRepos
             }
         }
     }
+
+    
 }
 
 sealed class ConexaoState {

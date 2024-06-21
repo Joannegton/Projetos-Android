@@ -3,6 +3,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.compose.backgoundContainer
 import com.example.compose.secondaryDark
 import com.example.compose.secondaryLight
@@ -51,7 +53,7 @@ import com.example.diariodememorias.viewModel.ResultadoLogin
 
 // Função Composable para a tela de Login
 @Composable
-fun Login(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
+fun Login(navController: NavController ,viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
     // Estados mutáveis para os campos de entrada de email e senha
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
@@ -127,7 +129,7 @@ fun Login(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
                 color = secondaryLight,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 5.dp)
+                modifier = Modifier.padding(start = 5.dp).clickable { navController.navigate("cadastro") }
             )
         }
 
@@ -146,11 +148,3 @@ fun Login(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
     }
 }
 
-@Preview
-@Composable
-private fun View() {
-    val viewModel: LoginViewModel = hiltViewModel()
-    Login(viewModel = viewModel, onLoginSuccess = {})
-
-
-}

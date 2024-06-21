@@ -1,5 +1,7 @@
 package com.example.diariodememorias.ui.componentes
 
+import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -30,11 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.diariodememorias.viewModel.ConexaoState
 import com.example.diariodememorias.viewModel.ConexaoViewModel
+import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 
-
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarMaster(viewModel: ConexaoViewModel) {
+fun TopAppBarMaster(viewModel: ConexaoViewModel, viewModel2: GerenciamentoSessaoViewModel) {
     var isParceiro by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
     val conexaoState by viewModel.conexaoState.collectAsState()
@@ -58,11 +61,21 @@ fun TopAppBarMaster(viewModel: ConexaoViewModel) {
                     ) {
                         IconeConectar()
                     }
-                    if (mostrarDialog){
-                        ConectarParceiroDialog(
-                            onConfirm = {email -> viewModel.conectarParceiro("",email)},
-                            onDismiss = { mostrarDialog = false }
-                        )
+                    if (mostrarDialog) {
+                        val usuarioId = viewModel2.uidState.value
+
+                        if (usuarioId != null) {
+                            ConectarParceiroDialog(
+                                onConfirm = { email ->
+                                        viewModel.conectarParceiro(usuarioId, email)
+
+                                },
+                                onDismiss = { mostrarDialog = false }
+                            )
+                        } else {
+                            // Lidar com o caso em que o usuário não está logado
+                            mostrarDialog = false
+                        }
                     }
 
                 }
@@ -86,7 +99,7 @@ fun TopAppBarMaster(viewModel: ConexaoViewModel) {
 }
 
 @Composable
-fun IconeConectar(modifier: Modifier = Modifier) {
+fun IconeConectar() {
     Box{
         Icon(
             imageVector = Icons.Default.Favorite,

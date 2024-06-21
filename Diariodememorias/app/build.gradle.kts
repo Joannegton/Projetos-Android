@@ -89,13 +89,17 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-pager:0.20.0")
 
     //dagger hilt - injeção de dependencia
-    implementation ("com.google.dagger:hilt-android:2.49")
-    kapt ("com.google.dagger:hilt-compiler:2.44")
+    implementation ("com.google.dagger:hilt-android:2.51.1")
+    kapt ("com.google.dagger:hilt-compiler:2.51.1")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.1")
 
     implementation ("androidx.compose.material:material-icons-extended:1.6.8")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+}
+
+kapt {
+    correctErrorTypes = true
 }

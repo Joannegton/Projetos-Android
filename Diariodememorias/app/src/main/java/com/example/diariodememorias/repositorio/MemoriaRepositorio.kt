@@ -19,27 +19,6 @@ class MemoriaRepositorio @Inject constructor() {
     private val db = Firebase.firestore
     private val storage = Firebase.storage
 
-    // Função para buscar o ID do usuário a partir do Firebase Authentication
-    fun getUsuarioId(): String {
-        return "mWOnWAQ6zGhgfzs7w0Wieii2ewc2" //auth.currentUser?.uid
-    }
-
-    // Função para buscar o ID do parceiro do banco de dados Firestore
-    suspend fun getParceiroId(): String {
-        val usuarioId = getUsuarioId()
-//        if (usuarioId != null) {
-//            val userRef = db.collection("usuarios").document(usuarioId)
-//            return try {
-//                val document = userRef.get().await()
-//                document.getString("parceiroId")
-//            } catch (e: Exception) {
-//                null
-//            }
-//        }
-        return "TFBncpRirNRNK2L1Q84KschgPED3"
-    }
-
-
     // Função para buscar memórias do Firestore
     suspend fun pegarMemorias(usuarioId: String, parceiroId: String): List<Memoria> {
         return try {

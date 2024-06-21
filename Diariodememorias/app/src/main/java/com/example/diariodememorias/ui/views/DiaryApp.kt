@@ -54,6 +54,7 @@ import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
 import com.example.diariodememorias.ui.componentes.VisualizadorImagemUrl
 import com.example.diariodememorias.util.Resultado
+import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.example.diariodememorias.viewModel.MemoriaViewModel
 import kotlinx.coroutines.launch
 
@@ -62,6 +63,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DiaryApp(
     viewModel: MemoriaViewModel,
+    viewModel2: GerenciamentoSessaoViewModel,
     showDialog: Boolean, // Recebe o estado
     onOpenViewer: () -> Unit, // Função para abrir o visualizador
     onCloseViewer: () -> Unit // Função para fechar o visualizador
@@ -100,7 +102,8 @@ fun DiaryApp(
                 if (showAddMemoryDialog) {
                     AddMemoriaScreen(
                         viewModel = viewModel,
-                        onDismiss = { showAddMemoryDialog = false }
+                        onDismiss = { showAddMemoryDialog = false },
+                        viewModel2 = viewModel2
                     )
                 }
             }
@@ -167,6 +170,7 @@ fun CardMemoria(memory: Memoria, onOpenViewer: (ImagePainter) -> Unit) {
 @Composable
 fun AddMemoriaScreen(
     viewModel: MemoriaViewModel,
+    viewModel2: GerenciamentoSessaoViewModel,
     onDismiss: () -> Unit
 ) {
     var titulo by remember { mutableStateOf("") }
@@ -242,8 +246,8 @@ fun AddMemoriaScreen(
                     viewModel.viewModelScope.launch {
                         // Verificamos se todos os campos foram preenchidos
                         if (titulo.isNotEmpty() && descricao.isNotEmpty() && imagemUri != null) {
-                            val usuarioId = viewModel.getUsuarioId()
-                            val parceiroId = viewModel.getParceiroId()
+                            val usuarioId = viewModel2.uidState
+                            val parceiroId = viewModel2.uidParceiroState
 
                             // upload da imagem e obtemos a URL de download
                             when (val result = viewModel.enviarMidia(imagemUri!!)) {
@@ -255,8 +259,8 @@ fun AddMemoriaScreen(
                                             title = titulo,
                                             description = descricao,
                                             imageUri = downloadUrl,
-                                            usuarioId = usuarioId,
-                                            compartilhadoCom = parceiroId
+                                            usuarioId = usuarioId.value.toString(),
+                                            compartilhadoCom = parceiroId.value.toString()
                                         )
                                     )
                                     onDismiss()
@@ -266,6 +270,8 @@ fun AddMemoriaScreen(
                                     val exception = result.data
                                     Log.i("TAG", "Erro ao fazer upload da imagem $exception")
                                 }
+
+                                else -> {}
                             }
                         } else {
                             Log.i("TAG", "Preencha todos os campos")
