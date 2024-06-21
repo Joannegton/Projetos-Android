@@ -3,7 +3,7 @@ package com.example.diariodememorias.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.diariodememorias.repositorio.ConexaoRepositorio
+import com.example.diariodememorias.data.repositorio.ConexaoRepositorio
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +21,6 @@ class ConexaoViewModel @Inject constructor(private val repositorio: ConexaoRepos
             _conexaoState.value = ConexaoState.Loading
             val resultado = repositorio.conectarParceiro(usuarioId, emailParceiro)
             _conexaoState.value = if (resultado.isSuccess) {
-                Log.i("tag", "deu certo")
                 ConexaoState.Success
             } else {
                 Log.i("tag", "deu errado")

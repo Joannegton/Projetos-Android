@@ -1,4 +1,4 @@
-package com.example.diariodememorias.models
+package com.example.diariodememorias.data.models
 
 data class Livro(
     val titulo: String = "",

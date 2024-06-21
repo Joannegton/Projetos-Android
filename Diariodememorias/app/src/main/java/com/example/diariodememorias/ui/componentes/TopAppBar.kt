@@ -85,9 +85,10 @@ fun TopAppBarMaster(viewModel: ConexaoViewModel, viewModel2: GerenciamentoSessao
                     ConexaoState.Loading -> {}
                     ConexaoState.Success -> {
                         isParceiro = true
+                        Toast.makeText(context, "Conectado", Toast.LENGTH_SHORT).show()
                     }
                     is ConexaoState.Error -> {
-                        val mensagemErro = (conexaoState as ConexaoState.Error).mensagem
+                        Toast.makeText(context, "Email não encontrado!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

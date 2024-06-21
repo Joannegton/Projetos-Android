@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.example.diariodememorias.R
-import com.example.diariodememorias.models.Livro
-import com.example.diariodememorias.models.Memoria
-import com.example.diariodememorias.models.Pagina
+import com.example.diariodememorias.data.models.Livro
+import com.example.diariodememorias.data.models.Memoria
+import com.example.diariodememorias.data.models.Pagina
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore

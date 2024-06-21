@@ -49,7 +49,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.example.compose.primaryContainerLight
-import com.example.diariodememorias.models.Memoria
+import com.example.diariodememorias.data.models.Memoria
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
 import com.example.diariodememorias.ui.componentes.VisualizadorImagemUrl

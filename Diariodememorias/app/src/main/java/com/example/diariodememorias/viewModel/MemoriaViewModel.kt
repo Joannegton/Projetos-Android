@@ -1,13 +1,11 @@
 package com.example.diariodememorias.viewModel
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.diariodememorias.models.Memoria
-import com.example.diariodememorias.repositorio.ConexaoRepositorio
-import com.example.diariodememorias.repositorio.MemoriaRepositorio
-import com.example.diariodememorias.util.GerenciadorDeSessao
+import com.example.diariodememorias.data.models.Memoria
+import com.example.diariodememorias.data.repositorio.MemoriaRepositorio
+import com.example.diariodememorias.data.repositorio.GerenciadorDeSessao
 import com.example.diariodememorias.util.Resultado
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

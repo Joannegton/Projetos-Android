@@ -36,8 +36,8 @@ import androidx.navigation.NavController
 import com.example.compose.tertiaryDark
 import com.example.diariodememorias.R
 import com.example.diariodememorias.util.criarLivroDeMemorias
-import com.example.diariodememorias.models.Livro
-import com.example.diariodememorias.models.Pagina
+import com.example.diariodememorias.data.models.Livro
+import com.example.diariodememorias.data.models.Pagina
 import com.example.diariodememorias.ui.componentes.VisualizadorImagem
 
 @OptIn(ExperimentalFoundationApi::class)

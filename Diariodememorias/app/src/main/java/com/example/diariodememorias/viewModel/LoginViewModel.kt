@@ -2,7 +2,7 @@ package com.example.diariodememorias.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.diariodememorias.repositorio.LoginRepositorio
+import com.example.diariodememorias.data.repositorio.LoginRepositorio
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

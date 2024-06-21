@@ -1,8 +1,8 @@
-package com.example.diariodememorias.repositorio
+package com.example.diariodememorias.data.repositorio
 
 import android.net.Uri
 import android.util.Log
-import com.example.diariodememorias.models.Memoria
+import com.example.diariodememorias.data.models.Memoria
 import com.example.diariodememorias.util.Resultado
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
@@ -28,7 +28,8 @@ class MemoriaRepositorio @Inject constructor() {
                 .get()
                 .await()
 
-            val memoriasCompartilhadas = compartilhadasQuery.documents.mapNotNull { it.toObject(Memoria::class.java) }
+            val memoriasCompartilhadas = compartilhadasQuery.documents.mapNotNull { it.toObject(
+                Memoria::class.java) }
 
             val todasAsMemoriasQuery = db.collection("memories")
                 .whereEqualTo("usuarioId", usuarioId)

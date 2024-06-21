@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.DiarioDeMemoriasTheme
-import com.example.diariodememorias.repositorio.LoginRepositorio
+import com.example.diariodememorias.data.repositorio.LoginRepositorio
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
 import com.example.diariodememorias.ui.componentes.Titulo

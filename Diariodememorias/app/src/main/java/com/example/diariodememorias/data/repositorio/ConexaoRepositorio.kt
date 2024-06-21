@@ -1,4 +1,4 @@
-package com.example.diariodememorias.repositorio
+package com.example.diariodememorias.data.repositorio
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestoreException
