@@ -31,15 +31,21 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val gerenciadorDe
         }
     }
 
-    fun pegarUidParceiro(usuarioId: String) {
+    fun pegarUidParceiro() {
         viewModelScope.launch {
             val uidParceiro = gerenciadorDeSessao.obterUidParceiro(uidState.value!!)
             if (uidParceiro != null) {
                 _uidParceiroState.emit(uidParceiro)
-                Log.i("Tag", "pegarUidParceiro: " + uidParceiro)
+                Log.i("Tag", "pegarUidParceiro: $uidParceiro")
             } else {
                 Log.i("Tag", "pegarUidParceiro: null")
             }
+        }
+    }
+
+    fun sair(){
+        viewModelScope.launch {
+            gerenciadorDeSessao.sair()
         }
     }
 }

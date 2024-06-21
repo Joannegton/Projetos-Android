@@ -40,17 +40,19 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             DiarioDeMemoriasTheme {
+                val navController = rememberNavController()
+
                 val conexaoViewModel: ConexaoViewModel = hiltViewModel()
                 val gerenciadorViewModel: GerenciamentoSessaoViewModel = hiltViewModel()
+                val loginViewModel: LoginViewModel = hiltViewModel()
+                val memoriaVielModel: MemoriaViewModel = hiltViewModel()
 
                 Scaffold(
-                    topBar = { TopAppBarMaster(conexaoViewModel, gerenciadorViewModel) },
+                    topBar = { TopAppBarMaster(navController, conexaoViewModel, gerenciadorViewModel) },
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = Color.Black
                 ){
-                    val navController = rememberNavController()
-                    val loginViewModel: LoginViewModel = hiltViewModel()
-                    val memoriaVielModel: MemoriaViewModel = hiltViewModel()
+
 
                     NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
                         composable("login") { Login(navController,loginViewModel, onLoginSuccess = {navController.navigate("diary")})}

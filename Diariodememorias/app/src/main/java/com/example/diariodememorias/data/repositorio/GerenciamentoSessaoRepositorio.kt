@@ -2,6 +2,7 @@ package com.example.diariodememorias.data.repositorio
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.Module
@@ -23,6 +24,7 @@ import javax.inject.Singleton
 class GerenciadorDeSessao @Inject constructor(@ApplicationContext private val context: Context) {
 
     private val db = Firebase.firestore // Instância do Firestore
+    private val auth = FirebaseAuth.getInstance()
 
     // Usando SharedPreferences para armazenar os dados do usuário
     private val prefs = context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
@@ -64,14 +66,15 @@ class GerenciadorDeSessao @Inject constructor(@ApplicationContext private val co
     }
 
     // Função para lidar com o logout
-    fun logout() {
+    fun sair() {
         // Implemente a lógica de logout aqui, como:
-        // Firebase.auth.signOut()
+        auth.signOut()
 
         // Limpa o ID do usuário do SharedPreferences
         CoroutineScope(Dispatchers.IO).launch {
             prefs.edit().remove("uid").apply() // Remove o uid
         }
+
     }
 
     // Outros métodos relacionados à sessão, como verificar se o usuário está logado, etc.
