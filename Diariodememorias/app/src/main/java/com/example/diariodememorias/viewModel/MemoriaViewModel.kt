@@ -1,6 +1,7 @@
 package com.example.diariodememorias.viewModel
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diariodememorias.data.models.Memoria
@@ -25,7 +26,6 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
     private val _isCarregando = MutableStateFlow(false)
     val isCarregando: StateFlow<Boolean> = _isCarregando
 
-
     // Estado para armazenar a mensagem de erro
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
@@ -33,20 +33,23 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
     // Função para buscar memórias, utilizando coroutines para operações assíncronas
     fun pegarMemorias() {
         val usuarioId = repositorio.obterUidFlow()
-
+        Log.d("TAG", "usuarioId: $usuarioId")
         viewModelScope.launch {
-            val parceiroId = repositorio.obterUidParceiro()
-            _isCarregando.value = true
-            try {
-                val fetchedMemories = repository.pegarMemorias(usuarioId.toString(), parceiroId.toString())
-                _memories.value = fetchedMemories
-            } catch (e: Exception) {
-                _errorMessage.value = e.message
-            } finally {
-                _isCarregando.value = false
+                val parceiroId = repositorio.obterUidParceiro()
+                Log.d("TAG", "parcceiroId: $parceiroId")
+
+                _isCarregando.value = true
+                try {
+                    val fetchedMemories = repository.pegarMemorias(usuarioId, parceiroId!!) // Use parceiroId aqui
+                    _memories.value = fetchedMemories
+                } catch (e: Exception) {
+                    _errorMessage.value = e.message
+                } finally {
+                    _isCarregando.value = false
+                }
             }
         }
-    }
+
 
     // Função para adicionar uma memória
     fun adicionarMemoria(memoria: Memoria) {
@@ -54,6 +57,7 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
             _isCarregando.value = true
             try {
                 repository.adicionarMemoria(memoria)
+                Log.d("TAG", "adicionarMemoria: $memoria")
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             } finally {

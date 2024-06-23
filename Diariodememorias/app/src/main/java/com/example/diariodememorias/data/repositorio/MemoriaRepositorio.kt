@@ -19,7 +19,7 @@ class MemoriaRepositorio @Inject constructor() {
     private val storage = Firebase.storage
 
     // Função para buscar memórias do Firestore
-    suspend fun pegarMemorias(usuarioId: String = "mWOnWAQ6zGhgfzs7w0Wieii2ewc2", parceiroId: String = "kSNLqxAZrVVWfVEHe6HHl35fbDr1"): List<Memoria> {
+    suspend fun pegarMemorias(usuarioId: String, parceiroId: String ): List<Memoria> {
         return try {
             val queryUsuario = db.collection("memories")
                 .whereEqualTo("compartilhadoCom", usuarioId)

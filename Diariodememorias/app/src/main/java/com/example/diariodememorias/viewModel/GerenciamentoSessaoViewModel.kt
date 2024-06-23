@@ -35,7 +35,7 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
     init {
         viewModelScope.launch {
             repositorio.usuarioLogado.collect { usuario ->
-                _uidState.value = usuario?.uid
+                _uidState.value = usuario?.id
                 _uidParceiroState.value = usuario?.parceiroId
                 _nomeState.value = usuario?.nome
                 _emailState.value = usuario?.email

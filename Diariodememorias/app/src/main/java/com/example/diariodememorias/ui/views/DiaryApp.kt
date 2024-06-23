@@ -185,8 +185,8 @@ fun AddMemoriaScreen(
         imagemUri = uri
     }
 
-    val usuarioId = viewModel2.uidState
-    val parceiroId = viewModel2.uidParceiroState
+    val usuarioId = viewModel2.uidState.collectAsState()
+    val parceiroId = viewModel2.uidParceiroState.collectAsState()
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -260,8 +260,8 @@ fun AddMemoriaScreen(
                                             title = titulo,
                                             description = descricao,
                                             imageUri = downloadUrl,
-                                            usuarioId = usuarioId.value.toString(),
-                                            compartilhadoCom = parceiroId.value.toString()
+                                            usuarioId = usuarioId.value,
+                                            compartilhadoCom = parceiroId.value
                                         )
                                     )
                                     onDismiss()

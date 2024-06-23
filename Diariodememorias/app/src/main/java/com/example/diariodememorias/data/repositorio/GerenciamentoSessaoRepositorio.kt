@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -31,20 +32,6 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
 
     private val _usuarioLogado = MutableStateFlow<Usuario?>(null)
     val usuarioLogado = _usuarioLogado.asStateFlow()
-
-//    // Usando SharedPreferences para armazenar os dados do usuário
-//    private val prefs = context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
-//
-//    // Hilt Module para fornecer o SharedPreferences
-//    @Module
-//    @InstallIn(SingletonComponent::class)
-//    object SharedPreferencesModule {
-//        @Provides
-//        @Singleton
-//        fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-//            return context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
-//        }
-//    }
 
     // Cria a MasterKey para criptografia
     private val masterKey = MasterKey.Builder(context)
@@ -72,11 +59,15 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
             )
         }
     }
+    private val _parceiroId = MutableStateFlow<String?>(null)
+    val parceiroId = _parceiroId.asStateFlow().value
+
+
 
     private fun salvarDadosUsuario(usuario: Usuario) {
         // Salva os dados no EncryptedSharedPreferences
         with(usuarioPrefs.edit()) {
-            putString("uid", usuario.uid)
+            putString("uid", usuario.id)
             putString("nome", usuario.nome)
             putString("email", usuario.email)
             putString("parceiroId", usuario.parceiroId)
@@ -97,9 +88,8 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
 
     private suspend fun cadastrarNoBanco(usuario: Usuario): Result<String> {
         return try {
-            usuario.uid?.let { db.collection("usuarios").document(it).set(usuario).await() }
+            usuario.id?.let { db.collection("usuarios").document(it).set(usuario).await() }
             _usuarioLogado.value = usuario // Atualiza o estado do usuário logado
-            salvarDadosUsuario(usuario)
             Result.success("Cadastrado com sucesso")
         } catch (e: Exception) {
             Result.failure(e)
@@ -130,6 +120,8 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
     private fun tentarRecuperarSessao(onSucesso: (Usuario) -> Unit, onFalha: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val uid = usuarioPrefs.getString("uid", null)
+            val parceiroId = usuarioPrefs.getString("parceiroId", null)
+            _parceiroId.value = parceiroId
             if (uid != null) {
                 try {
                     val usuario = carregarUsuario(uid)
@@ -146,15 +138,18 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
 
     private suspend fun carregarUsuario(uid: String): Usuario {
         val usuarioRef = db.collection("usuarios").document(uid).get().await()
-        return usuarioRef.toObject(Usuario::class.java)!! // Forçando a conversão para não-nulo, já que esperamos que o usuário exista
+        val usuario = usuarioRef.toObject(Usuario::class.java)!!
+        salvarDadosUsuario(usuario)
+        return usuario // Forçando a conversão para não-nulo, já que esperamos que o usuário exista
+
     }
 
     fun obterUidFlow() : String{
         return auth.currentUser?.uid ?: ""
     }
 
-    fun obterUidParceiro( ): String{
-        return usuarioLogado.value?.parceiroId ?: ""
+    fun obterUidParceiro(): String? {
+        return usuarioPrefs.getString("parceiroId", null)
     }
 
     fun sair() {
