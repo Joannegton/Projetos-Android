@@ -184,6 +184,9 @@ fun AddMemoriaScreen(
         imagemUri = uri
     }
 
+    val usuarioId = viewModel2.uidState
+    val parceiroId = viewModel2.uidParceiroState
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -246,9 +249,6 @@ fun AddMemoriaScreen(
                     viewModel.viewModelScope.launch {
                         // Verificamos se todos os campos foram preenchidos
                         if (titulo.isNotEmpty() && descricao.isNotEmpty() && imagemUri != null) {
-                            val usuarioId = viewModel2.uidState
-                            val parceiroId = viewModel2.uidParceiroState
-
                             // upload da imagem e obtemos a URL de download
                             when (val result = viewModel.enviarMidia(imagemUri!!)) {
                                 // Se o upload for bem-sucedido, criamos e adicionamos a memória

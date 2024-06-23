@@ -1,6 +1,5 @@
 package com.example.diariodememorias
 
-import Login
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
@@ -24,9 +23,9 @@ import com.example.diariodememorias.ui.views.Cadastro
 import com.example.diariodememorias.ui.views.ContagemRegressiva
 import com.example.diariodememorias.ui.views.DiaryApp
 import com.example.diariodememorias.ui.views.LivroDeMemoriasScreen
+import com.example.diariodememorias.ui.views.Login
 import com.example.diariodememorias.viewModel.ConexaoViewModel
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
-import com.example.diariodememorias.viewModel.LoginViewModel
 import com.example.diariodememorias.viewModel.MemoriaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,7 +43,6 @@ class MainActivity : ComponentActivity() {
 
                 val conexaoViewModel: ConexaoViewModel = hiltViewModel()
                 val gerenciadorViewModel: GerenciamentoSessaoViewModel = hiltViewModel()
-                val loginViewModel: LoginViewModel = hiltViewModel()
                 val memoriaVielModel: MemoriaViewModel = hiltViewModel()
 
                 Scaffold(
@@ -54,9 +52,9 @@ class MainActivity : ComponentActivity() {
                 ){
 
 
-                    NavHost(navController = navController, startDestination = "diary", modifier = Modifier.padding(it)) {
-                        composable("login") { Login(navController,loginViewModel, onLoginSuccess = {navController.navigate("diary")})}
-                        composable("cadastro"){ Cadastro(navController = navController, viewModel = loginViewModel)}
+                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
+                        composable("login") { Login(navController,gerenciadorViewModel, onLoginSuccess = {navController.navigate("diary")}) }
+                        composable("cadastro"){ Cadastro(navController = navController, viewModel = gerenciadorViewModel)}
                         composable("diary") {
                             DiaryApp(
                                 memoriaVielModel,

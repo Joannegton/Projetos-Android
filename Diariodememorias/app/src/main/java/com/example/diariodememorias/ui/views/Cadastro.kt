@@ -15,19 +15,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.compose.DiarioDeMemoriasTheme
-import com.example.diariodememorias.data.repositorio.LoginRepositorio
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
 import com.example.diariodememorias.ui.componentes.Titulo
-import com.example.diariodememorias.viewModel.LoginViewModel
+import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 
 @Composable
-fun Cadastro(navController: NavController, viewModel: LoginViewModel) {
+fun Cadastro(navController: NavController, viewModel: GerenciamentoSessaoViewModel) {
 
     var nome by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }

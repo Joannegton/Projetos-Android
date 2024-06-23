@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diariodememorias.data.models.Memoria
+import com.example.diariodememorias.data.repositorio.GerenciadorDeSessaoRepositorio
 import com.example.diariodememorias.data.repositorio.MemoriaRepositorio
-import com.example.diariodememorias.data.repositorio.GerenciadorDeSessao
 import com.example.diariodememorias.util.Resultado
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MemoriaViewModel @Inject constructor(private val repository: MemoriaRepositorio, private val repositorio: GerenciadorDeSessao) :
+class MemoriaViewModel @Inject constructor(private val repository: MemoriaRepositorio, private val repositorio: GerenciadorDeSessaoRepositorio) :
     ViewModel() {
 
     // Estado para armazenar a lista de memórias

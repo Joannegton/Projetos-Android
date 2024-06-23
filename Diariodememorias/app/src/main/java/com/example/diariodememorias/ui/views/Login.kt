@@ -1,3 +1,4 @@
+package com.example.diariodememorias.ui.views
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -12,13 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,31 +25,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.compose.backgoundContainer
-import com.example.compose.secondaryDark
 import com.example.compose.secondaryLight
 import com.example.diariodememorias.R
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
-import com.example.diariodememorias.viewModel.LoginViewModel
+import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.example.diariodememorias.viewModel.ResultadoLogin
 
-// Função Composable para a tela de Login
 @Composable
-fun Login(navController: NavController ,viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
+fun Login(navController: NavController ,viewModel: GerenciamentoSessaoViewModel, onLoginSuccess: () -> Unit) {
     // Estados mutáveis para os campos de entrada de email e senha
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
@@ -63,7 +52,7 @@ fun Login(navController: NavController ,viewModel: LoginViewModel, onLoginSucces
     // Observe o estado de login do ViewModel
     val loginState by viewModel.loginState.collectAsState()
 
-    // Layout para a tela de Login
+    // Layout para a tela de com.example.diariodememorias.ui.views.Login
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,7 +73,7 @@ fun Login(navController: NavController ,viewModel: LoginViewModel, onLoginSucces
 
         // Texto de dica
         Text(
-            text = "Realize seu Login",
+            text = "Realize seu com.example.diariodememorias.ui.views.Login",
             style = MaterialTheme.typography.bodyLarge,
             fontSize = 18.sp
         )
@@ -111,7 +100,7 @@ fun Login(navController: NavController ,viewModel: LoginViewModel, onLoginSucces
 
         Spacer(modifier = Modifier.padding(10.dp))
 
-        // Botão de Login
+        // Botão de com.example.diariodememorias.ui.views.Login
         Botao(
             onClick = {
             // Chama a função de login no ViewModel quando o botão for clicado
