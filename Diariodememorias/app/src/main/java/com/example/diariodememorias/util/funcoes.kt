@@ -27,37 +27,25 @@ private val db = Firebase.firestore
 
 
 
-fun conectarparceiro(usuarioId: String?, parceiroId: String, resultado: (Boolean, String?) -> Unit){
-    val userRef = db.collection("usuarios").document(usuarioId.toString())
-    val parceiroRef = db.collection("usuarios").document(parceiroId)
+//// Na sua Activity ou Fragment
+//lifecycleScope.launch {
+//    memoriaViewModel.errorMessage.collect { mensagem ->
+//        if (mensagem != null) {
+//            Toast.makeText(this@MainActivity, mensagem, Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//}
+//
+//// Na sua Activity ou Fragment
+//lifecycleScope.launch {
+//    memoriaViewModel.errorMessage.collect { mensagem ->
+//        if (mensagem != null) {
+//            Toast.makeText(this@MainActivity, mensagem, Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//}
 
-    db.runTransaction { transacao ->
-        transacao.update(userRef, "parceiroId", parceiroId)
-        transacao.update(parceiroRef, "parceiroId", usuarioId)
-    }.addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-            resultado(true, null)
-        } else {
-            resultado(false, task.exception?.message)
-        }
-    }
-}
 
-fun adicionarMemoria(memoria: Memoria, usuarioId: String, compartilhadoCom: String?, resultado: (Boolean, String?) -> Unit) {
-    val memoriaRef = db.collection("memories").document()
-    val memoriaData = memoria.copy(
-        compartilhadoCom = compartilhadoCom
-    )
-
-    memoriaRef.set(memoriaData)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                resultado(true, null)
-            } else {
-                resultado(false, task.exception?.message)
-            }
-        }
-}
 
 
 fun criarLivroDeMemorias(onResult: (Livro) -> Unit) {

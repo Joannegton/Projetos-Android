@@ -3,20 +3,21 @@ package com.example.diariodememorias.data.repositorio
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.diariodememorias.data.models.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -28,25 +29,62 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
     private val db = Firebase.firestore // Instância do Firestore
     private val auth = FirebaseAuth.getInstance()
 
-    // Usando SharedPreferences para armazenar os dados do usuário
-    private val prefs = context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
+    private val _usuarioLogado = MutableStateFlow<Usuario?>(null)
+    val usuarioLogado = _usuarioLogado.asStateFlow()
 
-    // Hilt Module para fornecer o SharedPreferences
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object SharedPreferencesModule {
-        @Provides
-        @Singleton
-        fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-            return context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
+//    // Usando SharedPreferences para armazenar os dados do usuário
+//    private val prefs = context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
+//
+//    // Hilt Module para fornecer o SharedPreferences
+//    @Module
+//    @InstallIn(SingletonComponent::class)
+//    object SharedPreferencesModule {
+//        @Provides
+//        @Singleton
+//        fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+//            return context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
+//        }
+//    }
+
+    // Cria a MasterKey para criptografia
+    private val masterKey = MasterKey.Builder(context)
+        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+        .build()
+
+    // Cria o EncryptedSharedPreferences
+    private val usuarioPrefs: SharedPreferences = EncryptedSharedPreferences.create(
+        context,
+        "dados_usuario",
+        masterKey,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
+    init {
+        // Verifica se há um usuário logado ao iniciar o repositório
+        CoroutineScope(Dispatchers.IO).launch {
+            tentarRecuperarSessao(
+                onSucesso = { usuario ->
+                    _usuarioLogado.value = usuario
+                },
+                onFalha = {
+                    // Não faz nada se não houver sessão, mantém _usuarioLogado como null
+                }
+            )
         }
     }
 
-    suspend fun cadastrar(
-        nome: String,
-        email: String,
-        senha: String,
-    ): Result<String> {
+    private fun salvarDadosUsuario(usuario: Usuario) {
+        // Salva os dados no EncryptedSharedPreferences
+        with(usuarioPrefs.edit()) {
+            putString("uid", usuario.uid)
+            putString("nome", usuario.nome)
+            putString("email", usuario.email)
+            putString("parceiroId", usuario.parceiroId)
+            apply()
+        }
+    }
+
+    suspend fun cadastrar(nome: String, email: String, senha: String): Result<String> {
         return try {
             val resultadoAuth = auth.createUserWithEmailAndPassword(email, senha).await()
             val usuarioId = resultadoAuth.user!!.uid
@@ -56,9 +94,12 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
             Result.failure(e)
         }
     }
+
     private suspend fun cadastrarNoBanco(usuario: Usuario): Result<String> {
         return try {
-            db.collection("usuarios").document(usuario.id).set(usuario).await()
+            usuario.uid?.let { db.collection("usuarios").document(it).set(usuario).await() }
+            _usuarioLogado.value = usuario // Atualiza o estado do usuário logado
+            salvarDadosUsuario(usuario)
             Result.success("Cadastrado com sucesso")
         } catch (e: Exception) {
             Result.failure(e)
@@ -71,9 +112,14 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
                 if (task.isSuccessful) {
                     val uid = auth.currentUser?.uid
                     uid?.let {
-                        salvarUid(it)
-                        Log.d("TAG", "UidLogin: $it")
-                        resultado(true, null)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                carregarUsuario(it)
+                                resultado(true, null)
+                            } catch (e: Exception) {
+                                resultado(false, "Erro ao carregar usuário: ${e.message}")
+                            }
+                        }
                     } ?: resultado(false, "Erro ao obter UID")
                 } else {
                     resultado(false, "Email ou senha incorretos")
@@ -81,48 +127,44 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
             }
     }
 
-    // Função para salvar o ID do usuário no SharedPreferences
-    fun salvarUid(uid: String) {
+    private fun tentarRecuperarSessao(onSucesso: (Usuario) -> Unit, onFalha: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            prefs.edit().putString("uid", uid).apply()
-            val parceiroUid = obterUidParceiro(uid)
-            prefs.edit().putString("uid", uid).apply()
-            Log.i("tag", "Salvou UID: $uid")
-            Log.i("tag", "Salvou UID: $parceiroUid")
-//            prefs.edit().putString("nomeUsuario", nome).apply()
-//            prefs.edit().putString("emailUsuario", email).apply()
-//            prefs.edit().putString("parceiroId", parceiroId).apply()
+            val uid = usuarioPrefs.getString("uid", null)
+            if (uid != null) {
+                try {
+                    val usuario = carregarUsuario(uid)
+                    onSucesso(usuario)
+                } catch (e: Exception) {
+                    // Lidar com erro ao carregar o usuário (ex: usuário não encontrado no Firestore)
+                    onFalha()
+                }
+            } else {
+                onFalha()
+            }
         }
     }
 
-    // Função para obter o ID do usuário como um Flow do SharedPreferences
-    fun obterUidFlow(): Flow<String?> {
-        return flow {
-            emit(prefs.getString("uid", null)) // Emite o uid, ou null se não existir
-        }
+    private suspend fun carregarUsuario(uid: String): Usuario {
+        val usuarioRef = db.collection("usuarios").document(uid).get().await()
+        return usuarioRef.toObject(Usuario::class.java)!! // Forçando a conversão para não-nulo, já que esperamos que o usuário exista
     }
 
-    // Função para obter o ID do usuário do parceiro do Firestore (assumindo um campo 'parceiroId')
-    suspend fun obterUidParceiro(usuarioId: String): String? {
-        val query = db.collection("usuarios").document(usuarioId).get().await()
-        return if (query.exists()){
-            query.data?.get("parceiroId") as String?
-        } else{
-            null
-        }
+    fun obterUidFlow() : String{
+        return auth.currentUser?.uid ?: ""
     }
 
-    // Função para lidar com o logout
+    fun obterUidParceiro( ): String{
+        return usuarioLogado.value?.parceiroId ?: ""
+    }
+
     fun sair() {
-        // Implemente a lógica de logout aqui, como:
         auth.signOut()
+        _usuarioLogado.value = null
 
-        // Limpa o ID do usuário do SharedPreferences
-        CoroutineScope(Dispatchers.IO).launch {
-            prefs.edit().remove("uid").apply() // Remove o uid
+        // Limpa os dados do EncryptedSharedPreferences
+        with(usuarioPrefs.edit()) {
+            clear()
+            apply()
         }
-
     }
-
-    // Outros métodos relacionados à sessão, como verificar se o usuário está logado, etc.
 }

@@ -35,7 +35,7 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
         val usuarioId = repositorio.obterUidFlow()
 
         viewModelScope.launch {
-            val parceiroId = repositorio.obterUidParceiro(usuarioId.toString())
+            val parceiroId = repositorio.obterUidParceiro()
             _isCarregando.value = true
             try {
                 val fetchedMemories = repository.pegarMemorias(usuarioId.toString(), parceiroId.toString())

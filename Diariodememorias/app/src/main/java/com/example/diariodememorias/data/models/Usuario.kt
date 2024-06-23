@@ -1,3 +1,8 @@
 package com.example.diariodememorias.data.models
 
-data class Usuario(val id: String, val nome: String, val email: String, val senha: String, val parceiroId: String? = null)
+data class Usuario(
+    var uid: String? = null,
+    var nome: String? = null,
+    var email: String? = null,
+    val senha: String? = null,
+    val parceiroId: String? = null)

@@ -25,16 +25,21 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
     private var _uidParceiroState = MutableStateFlow<String?>(null)
     val uidParceiroState: StateFlow<String?> = _uidParceiroState
 
+    private var _nomeState = MutableStateFlow<String?>(null)
+        val nomeState: StateFlow<String?> = _nomeState
+
+    private var _emailState = MutableStateFlow<String?>(null)
+        val emailState: StateFlow<String?> = _emailState
+
 
     init {
         viewModelScope.launch {
-            try {
-                repositorio.obterUidFlow()
-                    .collect { uid ->
-                        _uidState.emit(uid)
-                    }
-            } catch (e: Exception) {
-    Log.i("Tag", "errrroooo" + e.message.toString())           }
+            repositorio.usuarioLogado.collect { usuario ->
+                _uidState.value = usuario?.uid
+                _uidParceiroState.value = usuario?.parceiroId
+                _nomeState.value = usuario?.nome
+                _emailState.value = usuario?.email
+            }
         }
     }
 
@@ -51,29 +56,19 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
 
     }
     fun entrar(email: String, senha: String) {
-        if (email.isNotEmpty() || senha.isNotEmpty()) {
+        viewModelScope.launch {
+            if (email.isBlank() || senha.isBlank()) {
+                _loginState.value = ResultadoLogin(false, "Preencha todos os campos")
+                return@launch
+            }
+
             repositorio.entrar(email, senha) { sucesso, msg ->
                 _loginState.value = ResultadoLogin(sucesso, msg)
             }
-        } else {
-            _loginState.value = ResultadoLogin(false, "Preencha todos os campos")
         }
     }
     fun resetEstadoLogin() {
         _loginState.value = null
-    }
-
-    fun pegarUidParceiro() {
-        viewModelScope.launch {
-            val uidParceiro = repositorio.obterUidParceiro(uidState.value!!)
-            if (uidParceiro != null) {
-                _uidParceiroState.emit(uidParceiro)
-                Log.i("Tag", "pegarUidParceiro: $uidParceiro")
-                Log.i("Tag", "pegarUid: ${uidState.value}")
-            } else {
-                Log.i("Tag", "UidParceiro: null")
-            }
-        }
     }
 
     fun sair(){
