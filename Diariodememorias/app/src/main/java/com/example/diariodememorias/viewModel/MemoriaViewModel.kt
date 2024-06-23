@@ -57,6 +57,7 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
             _isCarregando.value = true
             try {
                 repository.adicionarMemoria(memoria)
+                pegarMemorias()
                 Log.d("TAG", "adicionarMemoria: $memoria")
             } catch (e: Exception) {
                 _errorMessage.value = e.message
