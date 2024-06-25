@@ -78,9 +78,10 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
     suspend fun cadastrar(nome: String, email: String, senha: String): Result<String> {
         return try {
             val resultadoAuth = auth.createUserWithEmailAndPassword(email, senha).await()
-            val usuarioId = resultadoAuth.user!!.uid
-            val usuario = Usuario(usuarioId, nome, email, senha)
-            cadastrarNoBanco(usuario)
+            resultadoAuth.user?.uid?.let { uid ->
+                val usuario = Usuario(uid, nome, email, senha)
+                cadastrarNoBanco(usuario)
+            } ?: Result.failure(Exception("Erro ao obter UID"))
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -88,8 +89,7 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
 
     private suspend fun cadastrarNoBanco(usuario: Usuario): Result<String> {
         return try {
-            usuario.id?.let { db.collection("usuarios").document(it).set(usuario).await() }
-            _usuarioLogado.value = usuario // Atualiza o estado do usuário logado
+            db.collection("usuarios").document(usuario.id!!).set(usuario).await()
             Result.success("Cadastrado com sucesso")
         } catch (e: Exception) {
             Result.failure(e)
@@ -120,11 +120,12 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
     private fun tentarRecuperarSessao(onSucesso: (Usuario) -> Unit, onFalha: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val uid = usuarioPrefs.getString("uid", null)
-            val parceiroId = usuarioPrefs.getString("parceiroId", null)
-            _parceiroId.value = parceiroId
             if (uid != null) {
                 try {
                     val usuario = carregarUsuario(uid)
+                    usuarioPrefs.getString("parceiroId", null)?.let {
+                        _parceiroId.value = it
+                    }
                     onSucesso(usuario)
                 } catch (e: Exception) {
                     // Lidar com erro ao carregar o usuário (ex: usuário não encontrado no Firestore)

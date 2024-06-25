@@ -44,7 +44,6 @@ class MainActivity : ComponentActivity() {
                 val conexaoViewModel: ConexaoViewModel = hiltViewModel()
                 val gerenciadorViewModel: GerenciamentoSessaoViewModel = hiltViewModel()
                 val memoriaVielModel: MemoriaViewModel = hiltViewModel()
-                val viewModelStoreOwner = this
 
 
                 Scaffold(

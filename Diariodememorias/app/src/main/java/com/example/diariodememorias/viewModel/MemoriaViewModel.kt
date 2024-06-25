@@ -15,8 +15,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MemoriaViewModel @Inject constructor(private val repository: MemoriaRepositorio, private val repositorio: GerenciadorDeSessaoRepositorio) :
-    ViewModel() {
+class MemoriaViewModel @Inject constructor(
+    private val repository: MemoriaRepositorio,
+    private val gerenciadorDeSessao: GerenciadorDeSessaoRepositorio
+) : ViewModel() {
 
     // Estado para armazenar a lista de memórias
     private val _memories = MutableStateFlow<List<Memoria>>(emptyList())
@@ -32,10 +34,10 @@ class MemoriaViewModel @Inject constructor(private val repository: MemoriaReposi
 
     // Função para buscar memórias, utilizando coroutines para operações assíncronas
     fun pegarMemorias() {
-        val usuarioId = repositorio.obterUidFlow()
+        val usuarioId = gerenciadorDeSessao.obterUidFlow()
         Log.d("TAG", "usuarioId: $usuarioId")
         viewModelScope.launch {
-                val parceiroId = repositorio.obterUidParceiro()
+                val parceiroId = gerenciadorDeSessao.obterUidParceiro()
                 Log.d("TAG", "parcceiroId: $parceiroId")
 
                 _isCarregando.value = true
