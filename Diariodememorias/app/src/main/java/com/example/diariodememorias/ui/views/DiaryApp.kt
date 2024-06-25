@@ -94,7 +94,7 @@ fun DiaryApp(
             Column(Modifier.fillMaxSize()) {
                 LazyColumn {
                     items(memories) { memory ->
-                        CardMemoria(memory){
+                        CardMemoria(memory) {
                             imagePaint = it
                             onOpenViewer()
                         }

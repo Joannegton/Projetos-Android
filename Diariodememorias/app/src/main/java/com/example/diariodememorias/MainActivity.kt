@@ -8,12 +8,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -32,11 +37,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var showDialog by mutableStateOf(false)
+    var isTelaLogin by mutableStateOf(true) // Estado compartilhado
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             DiarioDeMemoriasTheme {
                 val navController = rememberNavController()
@@ -47,14 +52,22 @@ class MainActivity : ComponentActivity() {
 
 
                 Scaffold(
-                    topBar = { TopAppBarMaster(navController, conexaoViewModel, gerenciadorViewModel) },
+                    topBar = { TopAppBarMaster(navController, conexaoViewModel, gerenciadorViewModel, isTelaLogin) },
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = Color.Black
                 ){
 
 
                     NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
-                        composable("login") { Login(navController,gerenciadorViewModel, onLoginSuccess = {navController.navigate("diary")}) }
+                        composable("login") {
+                            val isTelaLoginState = remember { mutableStateOf(isTelaLogin) } // Cria um MutableState
+                            Login(
+                                navController,
+                                gerenciadorViewModel,
+                                isTelaLoginState,
+                                onLoginSuccess = { navController.navigate("diary"); isTelaLogin = false }
+                            )
+                        }
                         composable("cadastro"){ Cadastro(navController = navController, viewModel = gerenciadorViewModel)}
                         composable("diary") {
                             DiaryApp(

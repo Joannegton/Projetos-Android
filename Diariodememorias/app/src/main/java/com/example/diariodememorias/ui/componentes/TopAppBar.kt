@@ -1,6 +1,7 @@
 package com.example.diariodememorias.ui.componentes
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,19 +49,16 @@ import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 fun TopAppBarMaster(
     navController: NavController,
     viewModel: ConexaoViewModel,
-    viewModel2: GerenciamentoSessaoViewModel
+    viewModel2: GerenciamentoSessaoViewModel,
+    isTelaLogin: Boolean
 ) {
     var isParceiro by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
     val conexaoState by viewModel.conexaoState.collectAsState()
     var mostrarMenu by remember { mutableStateOf(false) }
-    var isTelaLogin by remember { mutableStateOf(false) }
-
-    LaunchedEffect(navController) {
-        isTelaLogin = navController.currentBackStackEntry?.destination?.route == "login"
-    }
 
     val context = LocalContext.current
+
 
     TopAppBar(
         title = {
@@ -83,7 +82,6 @@ fun TopAppBarMaster(
                         }
                         if (mostrarDialog) {
                             val usuarioId = viewModel2.uidState.value
-
                             if (usuarioId != null) {
                                 ConectarParceiroDialog(
                                     onConfirm = { email ->
