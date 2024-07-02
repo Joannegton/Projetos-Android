@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diariodememorias.data.repositorio.GerenciadorDeSessaoRepositorio
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,15 +32,18 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
     private var _emailState = MutableStateFlow<String?>(null)
         val emailState: StateFlow<String?> = _emailState
 
+    private val _sairUsuario = MutableStateFlow(false)
+    val sairUsuario: StateFlow<Boolean> = _sairUsuario.asStateFlow()
+
 
     init {
         viewModelScope.launch {
-            repositorio.usuarioLogado.collect { usuario ->
-                _uidState.value = usuario?.id
-                _uidParceiroState.value = usuario?.parceiroId
-                _nomeState.value = usuario?.nome
-                _emailState.value = usuario?.email
-            }
+//            repositorio.usuarioLogado.collect { usuario ->
+//                _uidState.value = usuario?.id
+//                _uidParceiroState.value = usuario?.parceiroId
+//                _nomeState.value = usuario?.nome
+//                _emailState.value = usuario?.email
+//            }
         }
     }
 
@@ -71,10 +75,16 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
         _loginState.value = null
     }
 
-    fun sair(){
-        viewModelScope.launch {
-            repositorio.sair()
-        }
+    fun sair() {
+        repositorio.sair()
+    }
+
+    fun resetSairUsuario() {
+        _sairUsuario.value = false // Redefine o estado _sairUsuario
+    }
+
+    fun usuarioLogado(): Flow<Boolean> {
+        return repositorio.usuarioLogado()
     }
 }
 

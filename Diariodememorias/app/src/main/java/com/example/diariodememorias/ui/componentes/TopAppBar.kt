@@ -42,6 +42,8 @@ import androidx.navigation.NavController
 import com.example.diariodememorias.viewModel.ConexaoState
 import com.example.diariodememorias.viewModel.ConexaoViewModel
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,15 +52,15 @@ fun TopAppBarMaster(
     navController: NavController,
     viewModel: ConexaoViewModel,
     viewModel2: GerenciamentoSessaoViewModel,
-    isTelaLogin: Boolean
 ) {
     var isParceiro by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
     val conexaoState by viewModel.conexaoState.collectAsState()
     var mostrarMenu by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
+    val sairUsuario by viewModel2.sairUsuario.collectAsState()
 
+    val context = LocalContext.current
 
     TopAppBar(
         title = {
@@ -71,31 +73,30 @@ fun TopAppBarMaster(
             ) {
                 Text("Diário de Memórias", fontSize = 27.sp)
 
-                if (!isTelaLogin) {
-                    if (!isParceiro){
-                        IconButton(
-                            onClick = {
-                                mostrarDialog = true
-                            }
-                        ) {
-                            IconeConectar()
+                if (!isParceiro) {
+                    IconButton(
+                        onClick = {
+                            mostrarDialog = true
                         }
-                        if (mostrarDialog) {
-                            val usuarioId = viewModel2.uidState.value
-                            if (usuarioId != null) {
-                                ConectarParceiroDialog(
-                                    onConfirm = { email ->
-                                        viewModel.conectarParceiro(usuarioId, email)
-                                    },
-                                    onDismiss = { mostrarDialog = false }
-                                )
-                            } else {
-                                // Lidar com o caso em que o usuário não está logado
-                                mostrarDialog = false
-                            }
+                    ) {
+                        IconeConectar()
+                    }
+                    if (mostrarDialog) {
+                        val usuarioId = viewModel2.uidState.value
+                        if (usuarioId != null) {
+                            ConectarParceiroDialog(
+                                onConfirm = { email ->
+                                    viewModel.conectarParceiro(usuarioId, email)
+                                },
+                                onDismiss = { mostrarDialog = false }
+                            )
+                        } else {
+                            // Lidar com o caso em que o usuário não está logado
+                            mostrarDialog = false
                         }
                     }
                 }
+
                 when (conexaoState) {
                     ConexaoState.Idle -> {}
                     ConexaoState.Loading -> {}
@@ -112,24 +113,31 @@ fun TopAppBarMaster(
         },
         actions = {
             // Ícone de três pontinhos
-            if (!isTelaLogin) {
-                IconButton(onClick = { mostrarMenu = true }) {
-                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
-                }
+            IconButton(onClick = { mostrarMenu = true }) {
+                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
+            }
 
-                DropdownMenu(
-                    expanded = mostrarMenu,
-                    onDismissRequest = { mostrarMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text(text = "Sair") },
-                        onClick = {
-                            viewModel2.sair()
-                            mostrarMenu = false
-                            navController.navigate("login")
-                        })
+            DropdownMenu(
+                expanded = mostrarMenu,
+                onDismissRequest = { mostrarMenu = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text(text = "Sair") },
+                    onClick = {
+                        viewModel2.sair()
+                        navController.navigate("login")
+                        mostrarMenu = false
+                    }
+                )
+            }
+
+            LaunchedEffect(sairUsuario) {
+                if (sairUsuario) {
+                    navController.navigate("login") // Navega para a tela de login
+                    viewModel2.resetSairUsuario() // Redefine o estado _sairUsuario
                 }
             }
+
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,

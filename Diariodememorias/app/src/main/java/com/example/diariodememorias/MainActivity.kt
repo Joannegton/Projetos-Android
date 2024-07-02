@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,9 +51,14 @@ class MainActivity : ComponentActivity() {
                 val gerenciadorViewModel: GerenciamentoSessaoViewModel = hiltViewModel()
                 val memoriaVielModel: MemoriaViewModel = hiltViewModel()
 
+                val usuarioLogado by gerenciadorViewModel.usuarioLogado().collectAsState(initial = false)
 
                 Scaffold(
-                    topBar = { TopAppBarMaster(navController, conexaoViewModel, gerenciadorViewModel, isTelaLogin) },
+                    topBar = {
+                        if (usuarioLogado){
+                            TopAppBarMaster(navController, conexaoViewModel, gerenciadorViewModel)
+                        }
+                    },
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = Color.Black
                 ){
@@ -60,12 +66,10 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
                         composable("login") {
-                            val isTelaLoginState = remember { mutableStateOf(isTelaLogin) } // Cria um MutableState
                             Login(
                                 navController,
                                 gerenciadorViewModel,
-                                isTelaLoginState,
-                                onLoginSuccess = { navController.navigate("diary"); isTelaLogin = false }
+                                onLoginSuccess = { navController.navigate("diary")}
                             )
                         }
                         composable("cadastro"){ Cadastro(navController = navController, viewModel = gerenciadorViewModel)}

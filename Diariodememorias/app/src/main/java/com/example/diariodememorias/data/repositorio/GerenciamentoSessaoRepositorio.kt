@@ -30,8 +30,8 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
     private val db = Firebase.firestore // Instância do Firestore
     private val auth = FirebaseAuth.getInstance()
 
-    private val _usuarioLogado = MutableStateFlow<Usuario?>(null)
-    val usuarioLogado = _usuarioLogado.asStateFlow()
+    private val _verificarUsuarioLogado = MutableStateFlow(false)
+    val verificarUsuarioLogado = _verificarUsuarioLogado.asStateFlow()
 
     // Cria a MasterKey para criptografia
     private val masterKey = MasterKey.Builder(context)
@@ -51,7 +51,7 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
         CoroutineScope(Dispatchers.IO).launch {
             tentarRecuperarSessao(
                 onSucesso = { usuario ->
-                    _usuarioLogado.value = usuario
+                   // _usuarioLogado.value = usuario
                 },
                 onFalha = {
                     // Não faz nada se não houver sessão, mantém _usuarioLogado como null
@@ -104,7 +104,7 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
                     uid?.let {
                         CoroutineScope(Dispatchers.IO).launch {
                             try {
-                                carregarUsuario(it)
+                                //_usuarioLogado.value = carregarUsuario(it)
                                 resultado(true, null)
                             } catch (e: Exception) {
                                 resultado(false, "Erro ao carregar usuário: ${e.message}")
@@ -153,14 +153,13 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
         return usuarioPrefs.getString("parceiroId", null)
     }
 
+    fun usuarioLogado(): Flow<Boolean> {
+        val usuario = FirebaseAuth.getInstance().currentUser
+        _verificarUsuarioLogado.value = usuario != null
+        return  verificarUsuarioLogado
+    }
+
     fun sair() {
         auth.signOut()
-        _usuarioLogado.value = null
-
-        // Limpa os dados do EncryptedSharedPreferences
-        with(usuarioPrefs.edit()) {
-            clear()
-            apply()
-        }
     }
 }

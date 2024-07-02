@@ -46,7 +46,7 @@ import com.example.diariodememorias.viewModel.ResultadoLogin
 fun Login(
     navController: NavController,
     viewModel: GerenciamentoSessaoViewModel,
-    isTelaLogin: MutableState<Boolean>, // Recebe o estado isTelaLogin
+    //isTelaLogin: MutableState<Boolean>, // Recebe o estado isTelaLogin
     onLoginSuccess: () -> Unit) {
     // Estados mutáveis para os campos de entrada de email e senha
     var email by remember { mutableStateOf("") }
@@ -57,10 +57,13 @@ fun Login(
     // Observe o estado de login do ViewModel
     val loginState by viewModel.loginState.collectAsState()
 
+    val usuarioLogado by viewModel.usuarioLogado().collectAsState(initial = false)
+
+
     LaunchedEffect(loginState?.sucesso) {
         if (loginState is ResultadoLogin) {
             if (loginState!!.sucesso) {
-                isTelaLogin.value = false // Atualiza o estado compartilhado
+                //isTelaLogin.value = false // Atualiza o estado compartilhado
                 onLoginSuccess()
             } else {
                 // ...
@@ -89,7 +92,7 @@ fun Login(
 
         // Texto de dica
         Text(
-            text = "Realize seu com.example.diariodememorias.ui.views.Login",
+            text = "Realize seu Login",
             style = MaterialTheme.typography.bodyLarge,
             fontSize = 18.sp
         )
@@ -116,7 +119,7 @@ fun Login(
 
         Spacer(modifier = Modifier.padding(10.dp))
 
-        // Botão de com.example.diariodememorias.ui.views.Login
+        // Botão de Login
         Botao(
             onClick = {
             // Chama a função de login no ViewModel quando o botão for clicado
@@ -134,7 +137,9 @@ fun Login(
                 color = secondaryLight,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 5.dp).clickable { navController.navigate("cadastro") }
+                modifier = Modifier
+                    .padding(start = 5.dp)
+                    .clickable { navController.navigate("cadastro") }
             )
         }
 
@@ -149,6 +154,14 @@ fun Login(
                 Toast.makeText(context, loginState!!.msg, Toast.LENGTH_SHORT).show()
             }
             viewModel.resetEstadoLogin()
+        }
+    }
+
+    LaunchedEffect (usuarioLogado){
+        if (usuarioLogado){
+            navController.navigate("diary")
+        } else{
+            //isTelaLogin.value = false
         }
     }
 }
