@@ -58,7 +58,6 @@ fun TopAppBarMaster(
     val conexaoState by viewModel.conexaoState.collectAsState()
     var mostrarMenu by remember { mutableStateOf(false) }
 
-    val sairUsuario by viewModel2.sairUsuario.collectAsState()
 
     val context = LocalContext.current
 
@@ -131,12 +130,7 @@ fun TopAppBarMaster(
                 )
             }
 
-            LaunchedEffect(sairUsuario) {
-                if (sairUsuario) {
-                    navController.navigate("login") // Navega para a tela de login
-                    viewModel2.resetSairUsuario() // Redefine o estado _sairUsuario
-                }
-            }
+
 
         },
         colors = TopAppBarDefaults.topAppBarColors(

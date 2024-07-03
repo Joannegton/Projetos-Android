@@ -32,21 +32,6 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
     private var _emailState = MutableStateFlow<String?>(null)
         val emailState: StateFlow<String?> = _emailState
 
-    private val _sairUsuario = MutableStateFlow(false)
-    val sairUsuario: StateFlow<Boolean> = _sairUsuario.asStateFlow()
-
-
-    init {
-        viewModelScope.launch {
-//            repositorio.usuarioLogado.collect { usuario ->
-//                _uidState.value = usuario?.id
-//                _uidParceiroState.value = usuario?.parceiroId
-//                _nomeState.value = usuario?.nome
-//                _emailState.value = usuario?.email
-//            }
-        }
-    }
-
     fun cadastrar(nome: String, email: String, senha: String, confirmarSenha: String) {
         viewModelScope.launch {
             if (nome.isBlank() || email.isBlank() || senha.isBlank() || confirmarSenha.isBlank() || senha != confirmarSenha) {
@@ -77,10 +62,6 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
 
     fun sair() {
         repositorio.sair()
-    }
-
-    fun resetSairUsuario() {
-        _sairUsuario.value = false // Redefine o estado _sairUsuario
     }
 
     fun usuarioLogado(): Flow<Boolean> {

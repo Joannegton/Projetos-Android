@@ -31,7 +31,7 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
     private val auth = FirebaseAuth.getInstance()
 
     private val _verificarUsuarioLogado = MutableStateFlow(false)
-    val verificarUsuarioLogado = _verificarUsuarioLogado.asStateFlow()
+    private val verificarUsuarioLogado = _verificarUsuarioLogado.asStateFlow()
 
     // Cria a MasterKey para criptografia
     private val masterKey = MasterKey.Builder(context)
@@ -46,19 +46,7 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
-    init {
-        // Verifica se há um usuário logado ao iniciar o repositório
-        CoroutineScope(Dispatchers.IO).launch {
-            tentarRecuperarSessao(
-                onSucesso = { usuario ->
-                   // _usuarioLogado.value = usuario
-                },
-                onFalha = {
-                    // Não faz nada se não houver sessão, mantém _usuarioLogado como null
-                }
-            )
-        }
-    }
+
     private val _parceiroId = MutableStateFlow<String?>(null)
     val parceiroId = _parceiroId.asStateFlow().value
 
@@ -104,7 +92,7 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
                     uid?.let {
                         CoroutineScope(Dispatchers.IO).launch {
                             try {
-                                //_usuarioLogado.value = carregarUsuario(it)
+                                carregarUsuario(it)
                                 resultado(true, null)
                             } catch (e: Exception) {
                                 resultado(false, "Erro ao carregar usuário: ${e.message}")
@@ -117,32 +105,10 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
             }
     }
 
-    private fun tentarRecuperarSessao(onSucesso: (Usuario) -> Unit, onFalha: () -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val uid = usuarioPrefs.getString("uid", null)
-            if (uid != null) {
-                try {
-                    val usuario = carregarUsuario(uid)
-                    usuarioPrefs.getString("parceiroId", null)?.let {
-                        _parceiroId.value = it
-                    }
-                    onSucesso(usuario)
-                } catch (e: Exception) {
-                    // Lidar com erro ao carregar o usuário (ex: usuário não encontrado no Firestore)
-                    onFalha()
-                }
-            } else {
-                onFalha()
-            }
-        }
-    }
-
-    private suspend fun carregarUsuario(uid: String): Usuario {
+    private suspend fun carregarUsuario(uid: String) {
         val usuarioRef = db.collection("usuarios").document(uid).get().await()
         val usuario = usuarioRef.toObject(Usuario::class.java)!!
         salvarDadosUsuario(usuario)
-        return usuario // Forçando a conversão para não-nulo, já que esperamos que o usuário exista
-
     }
 
     fun obterUidFlow() : String{
