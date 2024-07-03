@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
@@ -272,7 +271,6 @@ fun AddMemoriaScreen(
                                     Log.i("TAG", "Erro ao fazer upload da imagem $exception")
                                 }
 
-                                else -> {}
                             }
                         } else {
                             Log.i("TAG", "Preencha todos os campos")

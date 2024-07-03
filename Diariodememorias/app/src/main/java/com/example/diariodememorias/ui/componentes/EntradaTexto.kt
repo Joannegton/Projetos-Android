@@ -24,7 +24,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.compose.secondaryContainerDark
 import com.example.compose.secondaryContainerLight
 import com.example.compose.secondaryDark
 import com.example.compose.secondaryLight

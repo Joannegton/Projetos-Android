@@ -2,7 +2,6 @@ package com.example.diariodememorias.data.repositorio
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.example.diariodememorias.data.models.Usuario
@@ -16,13 +15,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ViewModelScoped
 class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext private val context: Context) {
@@ -46,11 +41,6 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
-
-    private val _parceiroId = MutableStateFlow<String?>(null)
-    val parceiroId = _parceiroId.asStateFlow().value
-
-
 
     private fun salvarDadosUsuario(usuario: Usuario) {
         // Salva os dados no EncryptedSharedPreferences
@@ -111,18 +101,18 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
         salvarDadosUsuario(usuario)
     }
 
-    fun obterUidFlow() : String{
+    fun usuarioLogado(): Flow<Boolean> {
+        val usuario = FirebaseAuth.getInstance().currentUser
+        _verificarUsuarioLogado.value = usuario != null
+        return  verificarUsuarioLogado
+    }
+
+    fun obterUid() : String{
         return auth.currentUser?.uid ?: ""
     }
 
     fun obterUidParceiro(): String? {
         return usuarioPrefs.getString("parceiroId", null)
-    }
-
-    fun usuarioLogado(): Flow<Boolean> {
-        val usuario = FirebaseAuth.getInstance().currentUser
-        _verificarUsuarioLogado.value = usuario != null
-        return  verificarUsuarioLogado
     }
 
     fun sair() {

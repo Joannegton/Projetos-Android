@@ -34,7 +34,7 @@ class MemoriaViewModel @Inject constructor(
 
     // Função para buscar memórias, utilizando coroutines para operações assíncronas
     fun pegarMemorias() {
-        val usuarioId = gerenciadorDeSessao.obterUidFlow()
+        val usuarioId = gerenciadorDeSessao.obterUid()
         Log.d("TAG", "usuarioId: $usuarioId")
         viewModelScope.launch {
                 val parceiroId = gerenciadorDeSessao.obterUidParceiro()

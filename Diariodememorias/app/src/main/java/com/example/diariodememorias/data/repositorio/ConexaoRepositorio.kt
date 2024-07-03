@@ -1,12 +1,8 @@
 package com.example.diariodememorias.data.repositorio
 
 import android.util.Log
-import com.example.diariodememorias.data.models.Memoria
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 

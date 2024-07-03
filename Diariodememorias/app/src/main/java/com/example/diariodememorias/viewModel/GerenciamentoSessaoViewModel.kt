@@ -1,6 +1,5 @@
 package com.example.diariodememorias.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diariodememorias.data.repositorio.GerenciadorDeSessaoRepositorio
@@ -17,7 +16,7 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
     private val _loginState = MutableStateFlow<ResultadoLogin?>(null)
     var loginState: StateFlow<ResultadoLogin?> = _loginState
 
-    private var _cadastroState = MutableStateFlow<Result<String>>(Result.success(""))
+    private var _cadastroState = MutableStateFlow(Result.success(""))
     var cadastroState: StateFlow<Result<String>> = _cadastroState.asStateFlow()
 
     private var _uidState = MutableStateFlow<String?>(null)
@@ -26,11 +25,6 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
     private var _uidParceiroState = MutableStateFlow<String?>(null)
     val uidParceiroState: StateFlow<String?> = _uidParceiroState
 
-    private var _nomeState = MutableStateFlow<String?>(null)
-        val nomeState: StateFlow<String?> = _nomeState
-
-    private var _emailState = MutableStateFlow<String?>(null)
-        val emailState: StateFlow<String?> = _emailState
 
     fun cadastrar(nome: String, email: String, senha: String, confirmarSenha: String) {
         viewModelScope.launch {
@@ -60,13 +54,15 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
         _loginState.value = null
     }
 
+    fun usuarioLogado(): Flow<Boolean> {
+        return repositorio.usuarioLogado()
+    }
+
     fun sair() {
         repositorio.sair()
     }
 
-    fun usuarioLogado(): Flow<Boolean> {
-        return repositorio.usuarioLogado()
-    }
+
 }
 
 data class ResultadoLogin(val sucesso: Boolean, val msg: String?)

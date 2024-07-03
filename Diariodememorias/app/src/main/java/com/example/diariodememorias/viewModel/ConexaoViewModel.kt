@@ -33,8 +33,8 @@ class ConexaoViewModel @Inject constructor(private val repositorio: ConexaoRepos
 }
 
 sealed class ConexaoState {
-    object Idle : ConexaoState()
-    object Loading : ConexaoState()
-    object Success : ConexaoState()
+    data object Idle : ConexaoState()
+    data object Loading : ConexaoState()
+    data object Success : ConexaoState()
     data class Error(val mensagem: String?) : ConexaoState()
 }

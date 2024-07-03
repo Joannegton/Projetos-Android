@@ -17,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +45,6 @@ import com.example.diariodememorias.viewModel.ResultadoLogin
 fun Login(
     navController: NavController,
     viewModel: GerenciamentoSessaoViewModel,
-    //isTelaLogin: MutableState<Boolean>, // Recebe o estado isTelaLogin
     onLoginSuccess: () -> Unit) {
     // Estados mutáveis para os campos de entrada de email e senha
     var email by remember { mutableStateOf("") }
@@ -63,7 +61,6 @@ fun Login(
     LaunchedEffect(loginState?.sucesso) {
         if (loginState is ResultadoLogin) {
             if (loginState!!.sucesso) {
-                //isTelaLogin.value = false // Atualiza o estado compartilhado
                 onLoginSuccess()
             } else {
                 // ...
@@ -71,7 +68,6 @@ fun Login(
             viewModel.resetEstadoLogin()
         }
     }
-    // Layout para a tela de com.example.diariodememorias.ui.views.Login
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -160,8 +156,6 @@ fun Login(
     LaunchedEffect (usuarioLogado){
         if (usuarioLogado){
             navController.navigate("diary")
-        } else{
-            //isTelaLogin.value = false
         }
     }
 }
