@@ -33,7 +33,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.compose.backgoundContainer
 import com.example.compose.secondaryLight
 import com.example.diariodememorias.R
 import com.example.diariodememorias.ui.componentes.Botao
@@ -79,7 +78,7 @@ fun Login(
     ) {
         // Exibição de imagem
         Image(
-            painter = painterResource(R.drawable.eueela), contentDescription = "nós",
+            painter = painterResource(R.drawable.logo), contentDescription = "logo",
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
                 .border(5.dp, secondaryLight, MaterialTheme.shapes.medium)
