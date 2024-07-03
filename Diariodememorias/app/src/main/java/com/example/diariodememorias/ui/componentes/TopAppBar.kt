@@ -47,13 +47,17 @@ fun TopAppBarMaster(
     viewModel: ConexaoViewModel,
     viewModel2: GerenciamentoSessaoViewModel,
 ) {
-    var isParceiro by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
     val conexaoState by viewModel.conexaoState.collectAsState()
     var mostrarMenu by remember { mutableStateOf(false) }
-
-
+    var isParceiro by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    val parceiroId = viewModel2.parceiroId()
+    if (parceiroId != null) {
+        isParceiro = true
+    }
+
 
     TopAppBar(
         title = {
@@ -75,18 +79,13 @@ fun TopAppBarMaster(
                         IconeConectar()
                     }
                     if (mostrarDialog) {
-                        val usuarioId = viewModel2.uidState.value
-                        if (usuarioId != null) {
-                            ConectarParceiroDialog(
-                                onConfirm = { email ->
-                                    viewModel.conectarParceiro(usuarioId, email)
-                                },
-                                onDismiss = { mostrarDialog = false }
-                            )
-                        } else {
-                            // Lidar com o caso em que o usuário não está logado
-                            mostrarDialog = false
-                        }
+                        val usuarioId = viewModel2.usuarioId()
+                        ConectarParceiroDialog(
+                            onConfirm = { email ->
+                                viewModel.conectarParceiro(usuarioId, email)
+                            },
+                            onDismiss = { mostrarDialog = false }
+                        )
                     }
                 }
 

@@ -19,12 +19,6 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
     private var _cadastroState = MutableStateFlow(Result.success(""))
     var cadastroState: StateFlow<Result<String>> = _cadastroState.asStateFlow()
 
-    private var _uidState = MutableStateFlow<String?>(null)
-    val uidState: StateFlow<String?> = _uidState
-
-    private var _uidParceiroState = MutableStateFlow<String?>(null)
-    val uidParceiroState: StateFlow<String?> = _uidParceiroState
-
 
     fun cadastrar(nome: String, email: String, senha: String, confirmarSenha: String) {
         viewModelScope.launch {
@@ -60,6 +54,13 @@ class GerenciamentoSessaoViewModel @Inject constructor(private val repositorio: 
 
     fun sair() {
         repositorio.sair()
+    }
+
+    fun usuarioId(): String {
+        return repositorio.obterUid()
+    }
+    fun parceiroId(): String? {
+        return repositorio.obterUidParceiro()
     }
 
 

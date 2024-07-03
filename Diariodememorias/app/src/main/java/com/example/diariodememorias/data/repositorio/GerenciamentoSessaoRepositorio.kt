@@ -117,5 +117,6 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
 
     fun sair() {
         auth.signOut()
+        usuarioPrefs.edit().clear().apply()
     }
 }
