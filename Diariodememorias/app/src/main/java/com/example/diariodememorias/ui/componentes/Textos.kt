@@ -10,7 +10,7 @@ import com.example.compose.secondaryLight
 fun Titulo(texto: String) {
     Text(
         text = texto,
-        fontSize = 25.sp,
+        fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
         color = secondaryLight
     )

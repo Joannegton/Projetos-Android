@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,7 +48,6 @@ import androidx.lifecycle.viewModelScope
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import com.example.compose.primaryContainerLight
 import com.example.diariodememorias.data.models.Memoria
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
@@ -83,11 +82,19 @@ fun DiaryApp(
     Scaffold(
         floatingActionButton = {
             if (!showDialog) {
-                FloatingActionButton(onClick = { showAddMemoryDialog = true }) {
-                    Icon(Icons.Default.Add, contentDescription = "Adicionar Memória")
+                FloatingActionButton(
+                    onClick = { showAddMemoryDialog = true },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        "Adicionar Memória"
+                    )
                 }
             }
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) {
         Box {
             Column(Modifier.fillMaxSize()) {
@@ -131,6 +138,7 @@ fun CardMemoria(memory: Memoria, onOpenViewer: (ImagePainter) -> Unit) {
             .padding(8.dp)
             .fillMaxWidth()
             .zIndex(0f)
+            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -193,8 +201,7 @@ fun AddMemoriaScreen(
             Text(
                 "Adicionar Memória",
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                color = Color.Black,
+                fontSize = 22.sp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -291,7 +298,7 @@ fun AddMemoriaScreen(
                 largura = 130
             )
         },
-        containerColor = primaryContainerLight
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
     )
 }
 

@@ -68,13 +68,14 @@ fun Login(
             viewModel.resetEstadoLogin()
         }
     }
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(backgoundContainer)
+            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         // Exibição de imagem
         Image(
@@ -90,13 +91,13 @@ fun Login(
         Text(
             text = "Realize seu Login",
             style = MaterialTheme.typography.bodyLarge,
-            fontSize = 18.sp
+            fontSize = 20.sp
         )
         Spacer(modifier = Modifier.padding(5.dp))
 
         // Campo de entrada de email
         EntradaTexto(
-            texto = email,
+            texto = email.replace(" ", ""),
             onValueChange = {email = it},
             label = "email",
         )
@@ -105,7 +106,7 @@ fun Login(
 
         // Campo de entrada de senha
         EntradaTexto(
-            texto = senha,
+            texto = senha.replace(" ", ""),
             onValueChange = {senha = it},
             label = "Senha",
             isSenha = true,

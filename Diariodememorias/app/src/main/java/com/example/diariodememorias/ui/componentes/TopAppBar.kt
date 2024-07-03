@@ -106,7 +106,11 @@ fun TopAppBarMaster(
         actions = {
             // Ícone de três pontinhos
             IconButton(onClick = { mostrarMenu = true }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Menu",
+                    tint = MaterialTheme.colorScheme.secondaryContainer
+                )
             }
 
             DropdownMenu(
@@ -128,7 +132,7 @@ fun TopAppBarMaster(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = Color.White
+            titleContentColor = MaterialTheme.colorScheme.secondaryContainer
         )
     )
 }

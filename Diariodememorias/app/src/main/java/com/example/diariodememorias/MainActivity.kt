@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                             TopAppBarMaster(navController, conexaoViewModel, gerenciadorViewModel)
                         }
                     },
-                    containerColor = MaterialTheme.colorScheme.secondary,
+                    containerColor = MaterialTheme.colorScheme.background,
                     contentColor = Color.Black
                 ){
 
