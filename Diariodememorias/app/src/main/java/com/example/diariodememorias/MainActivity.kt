@@ -21,9 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.compose.DiarioDeMemoriasTheme
 import com.example.diariodememorias.ui.componentes.TopAppBarMaster
 import com.example.diariodememorias.ui.views.Cadastro
-import com.example.diariodememorias.ui.views.ContagemRegressiva
 import com.example.diariodememorias.ui.views.DiaryApp
-import com.example.diariodememorias.ui.views.LivroDeMemoriasScreen
 import com.example.diariodememorias.ui.views.Login
 import com.example.diariodememorias.viewModel.ConexaoViewModel
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
@@ -45,39 +43,51 @@ class MainActivity : ComponentActivity() {
                 val gerenciadorViewModel: GerenciamentoSessaoViewModel = hiltViewModel()
                 val memoriaVielModel: MemoriaViewModel = hiltViewModel()
 
-                val usuarioLogado by gerenciadorViewModel.usuarioLogado().collectAsState(initial = false)
+                val usuarioLogado by gerenciadorViewModel.usuarioLogado()
+                    .collectAsState(initial = false)
 
                 Scaffold(
                     topBar = {
-                        if (usuarioLogado){
+                        if (usuarioLogado) {
                             TopAppBarMaster(navController, conexaoViewModel, gerenciadorViewModel)
                         }
                     },
                     containerColor = MaterialTheme.colorScheme.background,
                     contentColor = Color.Black
-                ){
+                ) {
 
 
-                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(it)) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = "login",
+                        modifier = Modifier.padding(it)
+                    ) {
                         composable("login") {
                             Login(
                                 navController,
                                 gerenciadorViewModel,
-                                onLoginSuccess = { navController.navigate("diary")}
+                                onLoginSuccess = { navController.navigate("diary") }
                             )
                         }
-                        composable("cadastro"){ Cadastro(navController = navController, viewModel = gerenciadorViewModel)}
+                        composable("cadastro") {
+                            Cadastro(
+                                navController = navController,
+                                viewModel = gerenciadorViewModel
+                            )
+                        }
                         composable("diary") {
                             DiaryApp(
                                 memoriaVielModel,
                                 gerenciadorViewModel,
                                 showDialog = showDialog, // Passa o estado
-                                onOpenViewer = { showDialog = true }, // Função para abrir o visualizador
-                                onCloseViewer = { showDialog = false } // Função para fechar o visualizador
+                                onOpenViewer = {
+                                    showDialog = true
+                                }, // Função para abrir o visualizador
+                                onCloseViewer = {
+                                    showDialog = false
+                                } // Função para fechar o visualizador
                             )
                         }
-                        composable("livro10motivos") { LivroDeMemoriasScreen(navController) }
-                        composable("contagemRegressiva") { ContagemRegressiva(navController) }
                     }
                 }
 
@@ -87,7 +97,7 @@ class MainActivity : ComponentActivity() {
         }
 
         // Configura o callback para o botão de voltar
-        onBackPressedDispatcher.addCallback(this){
+        onBackPressedDispatcher.addCallback(this) {
             if (showDialog) {
                 showDialog = false // Fecha o visualizador
             } else {

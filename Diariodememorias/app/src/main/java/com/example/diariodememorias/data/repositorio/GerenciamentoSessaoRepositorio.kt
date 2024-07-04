@@ -87,17 +87,6 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
             }
     }
 
-    fun entrarComGoogle() {
-        BeginSignInRequest.builder()
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setServerClientId("895436099170-hskjhgvre26klm8r7udthp3ea8a0m8j2.apps.googleusercontent.com")
-                    .setFilterByAuthorizedAccounts(true)
-                        .build()
-            )
-            .build()
-    }
     private suspend fun carregarUsuario(uid: String) {
         val usuarioRef = db.collection("usuarios").document(uid).get().await()
         val usuario = usuarioRef.toObject(Usuario::class.java)!!
