@@ -11,6 +11,8 @@ import com.example.diariodememorias.util.Resultado
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,10 +22,6 @@ class MemoriaViewModel @Inject constructor(
     private val gerenciadorDeSessao: GerenciadorDeSessaoRepositorio
 ) : ViewModel() {
 
-    // Estado para armazenar a lista de memórias
-    private val _memories = MutableStateFlow<List<Memoria>>(emptyList())
-    val memories: StateFlow<List<Memoria>> = _memories
-
     // Estado para indicar se está carregando
     private val _isCarregando = MutableStateFlow(false)
     val isCarregando: StateFlow<Boolean> = _isCarregando
@@ -32,26 +30,22 @@ class MemoriaViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    // Função para buscar memórias, utilizando coroutines para operações assíncronas
-    fun pegarMemorias() {
-        val usuarioId = gerenciadorDeSessao.obterUid()
-        Log.d("TAG", "usuarioId: $usuarioId")
-        viewModelScope.launch {
-                val parceiroId = gerenciadorDeSessao.obterUidParceiro()
-                Log.d("TAG", "parcceiroId: $parceiroId")
+    private val todasMemorias = repository.memories
+    private val _memories = MutableStateFlow<List<Memoria>>(emptyList())
+    val memories: StateFlow<List<Memoria>> = _memories.asStateFlow()
 
-                _isCarregando.value = true
-                try {
-                    val fetchedMemories = repository.pegarMemorias(usuarioId, parceiroId!!) // Use parceiroId aqui
-                    _memories.value = fetchedMemories
-                } catch (e: Exception) {
-                    _errorMessage.value = e.message
-                } finally {
-                    _isCarregando.value = false
+    init {
+        viewModelScope.launch {
+            todasMemorias.collectLatest { memorias ->
+                val usuarioId = gerenciadorDeSessao.obterUid()
+                val parceiroId = gerenciadorDeSessao.obterUidParceiro()
+                val memoriasFiltradas = memorias.filter {
+                    it.usuarioId == usuarioId || it.compartilhadoCom == parceiroId
                 }
+                _memories.value = memoriasFiltradas
             }
         }
-
+    }
 
     // Função para adicionar uma memória
     fun adicionarMemoria(memoria: Memoria) {
@@ -59,7 +53,7 @@ class MemoriaViewModel @Inject constructor(
             _isCarregando.value = true
             try {
                 repository.adicionarMemoria(memoria)
-                pegarMemorias()
+                //pegarMemorias()
                 Log.d("TAG", "adicionarMemoria: $memoria")
             } catch (e: Exception) {
                 _errorMessage.value = e.message

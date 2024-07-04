@@ -9,6 +9,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
@@ -18,37 +20,26 @@ class MemoriaRepositorio @Inject constructor() {
     private val db = Firebase.firestore
     private val storage = Firebase.storage
 
-    // Função para buscar memórias do Firestore
-    suspend fun pegarMemorias(usuarioId: String, parceiroId: String ): List<Memoria> {
-        return try {
-            val queryUsuario = db.collection("memories")
-                .whereEqualTo("compartilhadoCom", usuarioId)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .await()
-            val memoriasUsuario = queryUsuario.documents.mapNotNull { it.toObject(
-                Memoria::class.java) }
+    private val _memories = MutableStateFlow<List<Memoria>>(emptyList())
+    val memories = _memories.asStateFlow()
 
-            val queryParceiro = db.collection("memories")
-                .whereEqualTo("compartilhadoCom", parceiroId)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .await()
-            val memoriasParceiro = queryParceiro.documents.mapNotNull {
-                it.toObject(Memoria::class.java)
+    init {
+        // Registra um SnapshotListener para observar mudanças na coleção "memories"
+        db.collection("memories")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Log.e("TAG", "Erro ao observar memórias", exception)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val memorias = snapshot.toObjects(Memoria::class.java)
+                    _memories.value = memorias
+                }
             }
-
-            val memoriasCompartilhadas = memoriasUsuario + memoriasParceiro
-
-
-            Log.i("tag", "memoriasCompartilhadas: ${memoriasCompartilhadas.size}")
-            memoriasCompartilhadas.distinctBy { it.timestamp }
-
-        } catch (e: Exception) {
-            Log.e("TAG", "Error fetching memories", e)
-            emptyList()
-        }
     }
+
 
     // Função para adicionar uma memória no Firestore
     suspend fun adicionarMemoria(memoria: Memoria): Result<Unit> {

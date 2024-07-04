@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.example.diariodememorias.data.models.Usuario
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -28,22 +30,12 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
     private val _verificarUsuarioLogado = MutableStateFlow(false)
     private val verificarUsuarioLogado = _verificarUsuarioLogado.asStateFlow()
 
-    // Cria a MasterKey para criptografia
-    private val masterKey = MasterKey.Builder(context)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
-
-    // Cria o EncryptedSharedPreferences
-    private val usuarioPrefs: SharedPreferences = EncryptedSharedPreferences.create(
-        context,
+    private val usuarioPrefs: SharedPreferences = context.getSharedPreferences(
         "dados_usuario",
-        masterKey,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        Context.MODE_PRIVATE
     )
 
     private fun salvarDadosUsuario(usuario: Usuario) {
-        // Salva os dados no EncryptedSharedPreferences
         with(usuarioPrefs.edit()) {
             putString("uid", usuario.id)
             putString("nome", usuario.nome)
@@ -95,6 +87,17 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
             }
     }
 
+    fun entrarComGoogle() {
+        BeginSignInRequest.builder()
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    .setServerClientId("895436099170-hskjhgvre26klm8r7udthp3ea8a0m8j2.apps.googleusercontent.com")
+                    .setFilterByAuthorizedAccounts(true)
+                        .build()
+            )
+            .build()
+    }
     private suspend fun carregarUsuario(uid: String) {
         val usuarioRef = db.collection("usuarios").document(uid).get().await()
         val usuario = usuarioRef.toObject(Usuario::class.java)!!

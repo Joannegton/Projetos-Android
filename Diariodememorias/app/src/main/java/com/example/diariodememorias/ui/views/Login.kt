@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ import com.example.compose.secondaryLight
 import com.example.diariodememorias.R
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
+import com.example.diariodememorias.ui.componentes.Titulo
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.example.diariodememorias.viewModel.ResultadoLogin
 
@@ -69,30 +71,25 @@ fun Login(
     }
 
     Column(
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
             .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
-        // Exibição de imagem
+        Spacer(modifier = Modifier.padding(50.dp))
+
         Image(
             painter = painterResource(R.drawable.logo), contentDescription = "logo",
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
-                .border(5.dp, secondaryLight, MaterialTheme.shapes.medium)
+            modifier = Modifier.size(150.dp)
         )
+        Spacer(modifier = Modifier.padding(20.dp))
 
-        Spacer(modifier = Modifier.padding(10.dp))
 
-        // Texto de dica
-        Text(
-            text = "Realize seu Login",
-            style = MaterialTheme.typography.bodyLarge,
-            fontSize = 20.sp
+        Titulo(
+            texto = "Realize seu Login"
         )
-        Spacer(modifier = Modifier.padding(5.dp))
+        Spacer(modifier = Modifier.padding(15.dp))
 
         // Campo de entrada de email
         EntradaTexto(
@@ -118,20 +115,19 @@ fun Login(
         // Botão de Login
         Botao(
             onClick = {
-            // Chama a função de login no ViewModel quando o botão for clicado
             viewModel.entrar(email, senha)
             },
             texto = "Entrar"
         )
 
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.padding(15.dp))
 
         Row (horizontalArrangement = Arrangement.Center ,modifier = Modifier.fillMaxWidth()){
-            Text(text = "Não possui conta?", fontSize = 18.sp)
+            Text(text = "Não possui conta?", fontSize = 20.sp)
             Text(
                 text = "Cadastre-se",
                 color = secondaryLight,
-                fontSize = 18.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(start = 5.dp)
