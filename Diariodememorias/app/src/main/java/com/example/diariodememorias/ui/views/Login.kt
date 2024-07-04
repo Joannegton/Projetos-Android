@@ -117,7 +117,9 @@ fun Login(
             onClick = {
             viewModel.entrar(email, senha)
             },
-            texto = "Entrar"
+            texto = "Entrar",
+            modifier = Modifier.fillMaxWidth()
+
         )
 
         Spacer(modifier = Modifier.padding(15.dp))

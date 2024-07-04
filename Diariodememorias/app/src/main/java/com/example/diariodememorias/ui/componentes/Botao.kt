@@ -21,11 +21,12 @@ fun Botao(
     largura: Int = 200,
     fonteTexto: Int = 20,
     enabled: Boolean = true,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cor: Color = secondaryDark
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(secondaryDark),
+        colors = ButtonDefaults.buttonColors(cor),
         enabled = enabled,
         modifier = modifier
             .width(largura.dp)

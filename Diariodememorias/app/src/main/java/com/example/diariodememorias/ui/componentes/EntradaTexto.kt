@@ -24,7 +24,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.compose.secondaryContainerDark
 import com.example.compose.secondaryContainerLight
+import com.example.compose.secondaryContainerLightHighContrast
 import com.example.compose.secondaryDark
 import com.example.compose.secondaryLight
 
@@ -52,7 +54,7 @@ fun EntradaTexto(
         isError = erro,
         singleLine = linhaUnica,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = secondaryDark,
+            focusedContainerColor = secondaryContainerLight,
             unfocusedContainerColor = secondaryContainerLight,
             focusedTextColor = Color.Black,
             unfocusedTextColor = secondaryLight,

@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,6 +53,7 @@ import coil.compose.rememberImagePainter
 import com.example.diariodememorias.data.models.Memoria
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
+import com.example.diariodememorias.ui.componentes.VisualizadorImagem
 import com.example.diariodememorias.ui.componentes.VisualizadorImagemUrl
 import com.example.diariodememorias.util.Resultado
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
@@ -188,6 +191,8 @@ fun AddMemoriaScreen(
         imagemUri = uri
     }
 
+    var showDialog by remember { mutableStateOf(false) }
+
     val usuarioId = viewModel2.usuarioId()
     val parceiroId = viewModel2.parceiroId()
 
@@ -218,14 +223,14 @@ fun AddMemoriaScreen(
                     label = "Descrição"
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 if (imagemUri == null) {
                     Botao(
                         onClick = { imagePickerLauncher.launch("image/*") },
                         texto = "Selecionar Imagem",
                         fonteTexto = 14,
-                        modifier = Modifier.width(200.dp)
+                        cor = Color.LightGray
                     )
                 }
 
@@ -237,8 +242,12 @@ fun AddMemoriaScreen(
                             .fillMaxWidth()
                             .height(200.dp)
                             .clip(RoundedCornerShape(8.dp))
+                            .clickable {
+                                showDialog = true
+                            }
                     )
                 }
+                VisualizadorImagem(imagem = imagemUri, dialog = showDialog, onDialogDismiss = { showDialog = false } )
 
                 if (isCarregando) {
                     CircularProgressIndicator()
@@ -246,53 +255,55 @@ fun AddMemoriaScreen(
             }
         },
         confirmButton = {
-            Botao(
-                onClick = {
-                    // Iniciamos uma nova coroutine no escopo do ViewModel
-                    viewModel.viewModelScope.launch {
-                        // Verificamos se todos os campos foram preenchidos
-                        if (titulo.isNotEmpty() && descricao.isNotEmpty() && imagemUri != null) {
-                            // upload da imagem e obtemos a URL de download
-                            when (val result = viewModel.enviarMidia(imagemUri!!)) {
-                                // Se o upload for bem-sucedido, criamos e adicionamos a memória
-                                is Resultado.Sucesso -> {
-                                    val downloadUrl = result.data
-                                    viewModel.adicionarMemoria(
-                                        Memoria(
-                                            title = titulo,
-                                            description = descricao,
-                                            imageUri = downloadUrl,
-                                            usuarioId = usuarioId,
-                                            compartilhadoCom = parceiroId
+            Row {
+                Botao(
+                    onClick = onDismiss,
+                    texto = "Voltar",
+                    fonteTexto = 16,
+                    largura = 125,
+                    cor = MaterialTheme.colorScheme.tertiaryContainer
+                )
+                Botao(
+                    onClick = {
+                        // Iniciamos uma nova coroutine no escopo do ViewModel
+                        viewModel.viewModelScope.launch {
+                            // Verificamos se todos os campos foram preenchidos
+                            if (titulo.isNotEmpty() && descricao.isNotEmpty() && imagemUri != null) {
+                                // upload da imagem e obtemos a URL de download
+                                when (val result = viewModel.enviarMidia(imagemUri!!)) {
+                                    // Se o upload for bem-sucedido, criamos e adicionamos a memória
+                                    is Resultado.Sucesso -> {
+                                        val downloadUrl = result.data
+                                        viewModel.adicionarMemoria(
+                                            Memoria(
+                                                title = titulo,
+                                                description = descricao,
+                                                imageUri = downloadUrl,
+                                                usuarioId = usuarioId,
+                                                compartilhadoCom = parceiroId
+                                            )
                                         )
-                                    )
-                                    onDismiss()
-                                }
-                                // Se o upload falhar, tratamos a exceção
-                                is Resultado.Falha -> {
-                                    val exception = result.data
-                                    Log.i("TAG", "Erro ao fazer upload da imagem $exception")
-                                }
+                                        onDismiss()
+                                    }
+                                    // Se o upload falhar, tratamos a exceção
+                                    is Resultado.Falha -> {
+                                        val exception = result.data
+                                        Log.i("TAG", "Erro ao fazer upload da imagem $exception")
+                                    }
 
+                                }
+                            } else {
+                                Log.i("TAG", "Preencha todos os campos")
                             }
-                        } else {
-                            Log.i("TAG", "Preencha todos os campos")
                         }
-                    }
-                },
-                texto = "Adicionar",
-                fonteTexto = 14,
-                largura = 134,
-                enabled = !isCarregando
-            )
-        },
-        dismissButton = {
-            Botao(
-                onClick = onDismiss,
-                texto = "Cancelar",
-                fonteTexto = 14,
-                largura = 130
-            )
+                    },
+                    texto = "Adicionar",
+                    fonteTexto = 16,
+                    largura = 144,
+                    enabled = !isCarregando
+                )
+
+            }
         },
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
     )

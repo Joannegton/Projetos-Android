@@ -1,13 +1,17 @@
 package com.example.diariodememorias.ui.views
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,9 +22,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.compose.backgoundContainer
+import com.example.diariodememorias.R
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
 import com.example.diariodememorias.ui.componentes.Titulo
@@ -39,14 +45,19 @@ fun Cadastro(navController: NavController, viewModel: GerenciamentoSessaoViewMod
     val context = LocalContext.current
 
     Column(
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(backgoundContainer)
+            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.padding(50.dp))
+
+        Image(
+            painter = painterResource(R.drawable.logo), contentDescription = "logo",
+            modifier = Modifier.size(150.dp)
+        )
+        Spacer(modifier = Modifier.padding(20.dp))
 
         Titulo(texto = "Cadastrar Usuário")
         Spacer(modifier = Modifier.height(16.dp))
@@ -87,7 +98,8 @@ fun Cadastro(navController: NavController, viewModel: GerenciamentoSessaoViewMod
             onClick = {
                 viewModel.cadastrar(nome, email, senha, confirmarSenha)
             },
-            texto = "Cadastrar"
+            texto = "Cadastrar",
+            modifier = Modifier.fillMaxWidth()
         )
 
         // Observa o estado do cadastro e exibe o Toast
