@@ -40,9 +40,10 @@ class MemoriaViewModel @Inject constructor(
                 val usuarioId = gerenciadorDeSessao.obterUid()
                 val parceiroId = gerenciadorDeSessao.obterUidParceiro()
                 val memoriasFiltradas = memorias.filter {
-                    it.usuarioId == usuarioId || it.compartilhadoCom == parceiroId
+                    it.usuarioId == usuarioId || (parceiroId != null && it.compartilhadoCom == parceiroId)
                 }
                 _memories.value = memoriasFiltradas
+                Log.d("TAG", "initt: $memoriasFiltradas")
             }
         }
     }
