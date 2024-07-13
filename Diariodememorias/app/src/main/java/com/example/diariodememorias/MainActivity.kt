@@ -1,6 +1,7 @@
 package com.example.diariodememorias
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
@@ -35,12 +36,20 @@ import com.example.diariodememorias.ui.views.Login
 import com.example.diariodememorias.viewModel.ConexaoViewModel
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.example.diariodememorias.viewModel.MemoriaViewModel
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var showDialog by mutableStateOf(false)
+
+    private var mInterstitialAd: InterstitialAd? = null // Variável para o adMob
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +132,42 @@ class MainActivity : ComponentActivity() {
                 finish() // Finaliza a Activity se o visualizador não estiver visível
             }
         }
+
+    // Carrega o adMob
+        InterstitialAd.load(
+            this,"ca-app-pub-7575556543606646/2964043134",
+            AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    adError.message.let { Log.d("MainActivity", it) }
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d("MainActivity", "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                }
+            }
+        )
+    }
+
+    fun mostrarInterstitialAnuncio() {
+        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                Log.d("MainActivity", "Ad was dismissed.")
+            }
+
+            override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                Log.d("MainActivity", "Ad failed to show.")
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                Log.d("MainActivity", "Ad showed fullscreen content.")
+                mInterstitialAd = null
+            }
+        }
+
+        mInterstitialAd?.show(this)
     }
 }
 

@@ -36,12 +36,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.diariodememorias.MainActivity
 import com.example.diariodememorias.R
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
 import com.example.diariodememorias.ui.componentes.Titulo
 import com.example.diariodememorias.ui.theme.DiarioDeMemoriasTheme
-import com.example.diariodememorias.ui.theme.secondaryLight
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.example.diariodememorias.viewModel.MemoriaViewModel
 import com.example.diariodememorias.viewModel.ResultadoLogin
@@ -122,6 +122,7 @@ fun Login(
         Botao(
             onClick = {
                 viewModel.entrar(email, senha)
+                (context as MainActivity).mostrarInterstitialAnuncio()
             },
             texto = "Entrar",
             modifier = Modifier.fillMaxWidth()
