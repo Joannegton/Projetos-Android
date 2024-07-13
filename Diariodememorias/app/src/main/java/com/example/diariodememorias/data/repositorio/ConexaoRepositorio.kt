@@ -48,7 +48,6 @@ class ConexaoRepositorio @Inject constructor() {
                 }.await()
             }
 
-            Log.i("tag", "Memorias compartilhadas: ${listaMemorias.size}")
             Result.success(Unit)
 
         } catch (e: Exception) {

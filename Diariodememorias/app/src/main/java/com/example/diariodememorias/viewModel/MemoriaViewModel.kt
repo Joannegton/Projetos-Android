@@ -46,7 +46,6 @@ class MemoriaViewModel @Inject constructor(
                     it.usuarioId == usuarioId || (parceiroId != null && it.compartilhadoCom == parceiroId)
                 }}.collectLatest { memoriasFiltradas ->
                 _memories.value = memoriasFiltradas
-                Log.d("TAG", "initt: $memoriasFiltradas")
             }
         }
     }
@@ -88,7 +87,6 @@ class MemoriaViewModel @Inject constructor(
                     it.usuarioId == usuarioId || (parceiroId != null && it.compartilhadoCom == parceiroId)
                 }}.collectLatest { memoriasFiltradas ->
                 _memories.value = memoriasFiltradas
-                Log.d("TAG", "carregarMemorias: $memoriasFiltradas")
             }
         }
     }

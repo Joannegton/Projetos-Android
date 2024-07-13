@@ -152,7 +152,6 @@ fun Login(
                 onLoginSuccess()
                 memoriaViewModel.carregarMemorias()
             } else {
-                Log.i("Tag", loginState!!.msg!!)
                 Toast.makeText(context, loginState!!.msg, Toast.LENGTH_SHORT).show()
             }
             viewModel.resetEstadoLogin()

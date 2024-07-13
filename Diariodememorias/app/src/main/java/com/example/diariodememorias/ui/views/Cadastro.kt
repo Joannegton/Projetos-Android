@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.diariodememorias.MainActivity
 import com.example.diariodememorias.R
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
@@ -47,7 +48,7 @@ fun Cadastro(navController: NavController, viewModel: GerenciamentoSessaoViewMod
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(MaterialTheme.colorScheme.primaryContainer)
     ) {
         Spacer(modifier = Modifier.padding(50.dp))
 
@@ -109,6 +110,7 @@ fun Cadastro(navController: NavController, viewModel: GerenciamentoSessaoViewMod
                         cadastroState.getOrNull() ?: "Cadastro realizado com sucesso",
                         Toast.LENGTH_SHORT
                     ).show()
+                    (context as MainActivity).mostrarInterstitialAnuncio() // Chama o método para mostrar o anúncio
                     navController.navigate("login")
                 }
             } else if (cadastroState.isFailure) {

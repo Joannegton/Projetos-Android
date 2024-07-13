@@ -23,7 +23,6 @@ class ConexaoViewModel @Inject constructor(private val repositorio: ConexaoRepos
             _conexaoState.value = if (resultado.isSuccess) {
                 ConexaoState.Success
             } else {
-                Log.i("tag", "deu errado")
                 ConexaoState.Error(resultado.exceptionOrNull()?.message)
             }
         }

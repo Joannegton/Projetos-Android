@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,6 +49,7 @@ import androidx.lifecycle.viewModelScope
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
+import com.example.diariodememorias.MainActivity
 import com.example.diariodememorias.data.models.Memoria
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
@@ -74,7 +74,7 @@ fun DiaryApp(
     var showAddMemoryDialog by remember { mutableStateOf(false) }
 
     val initialImagePainter =
-        rememberImagePainter("https://s2-techtudo.glbimg.com/SSAPhiaAy_zLTOu3Tr3ZKu2H5vg=/0x0:1024x609/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2022/c/u/15eppqSmeTdHkoAKM0Uw/dall-e-2.jpg")
+        rememberImagePainter("")
     var imagePaint by remember { mutableStateOf(initialImagePainter) }
 
 
@@ -191,6 +191,8 @@ fun AddMemoriaScreen(
         imagemUri = uri
     }
 
+    val context = LocalContext.current
+
     var showDialog by remember { mutableStateOf(false) }
 
     val usuarioId = viewModel2.usuarioId()
@@ -283,6 +285,7 @@ fun AddMemoriaScreen(
                                                 compartilhadoCom = parceiroId
                                             )
                                         )
+                                        (context as MainActivity).mostrarInterstitialAnuncio()
                                         onDismiss()
                                     }
                                     // Se o upload falhar, tratamos a exceção
@@ -292,8 +295,6 @@ fun AddMemoriaScreen(
                                     }
 
                                 }
-                            } else {
-                                Log.i("TAG", "Preencha todos os campos")
                             }
                         }
                     },

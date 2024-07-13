@@ -49,7 +49,6 @@ class MemoriaRepositorio @Inject constructor() {
             memoriaRef.set(memoriaData).await()
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("TAG", "Não adicionou memoria" + e.message)
             Result.failure(e)
         }
     }
