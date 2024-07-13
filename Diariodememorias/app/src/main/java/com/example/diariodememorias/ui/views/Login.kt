@@ -40,12 +40,14 @@ import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
 import com.example.diariodememorias.ui.componentes.Titulo
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
+import com.example.diariodememorias.viewModel.MemoriaViewModel
 import com.example.diariodememorias.viewModel.ResultadoLogin
 
 @Composable
 fun Login(
     navController: NavController,
     viewModel: GerenciamentoSessaoViewModel,
+    memoriaViewModel: MemoriaViewModel,
     onLoginSuccess: () -> Unit) {
     // Estados mutáveis para os campos de entrada de email e senha
     var email by remember { mutableStateOf("") }
@@ -143,6 +145,7 @@ fun Login(
         if (loginState is ResultadoLogin) {
             if (loginState!!.sucesso) {
                 onLoginSuccess()
+                memoriaViewModel.carregarMemorias()
             } else{
                 Log.i("Tag", loginState!!.msg!!)
                 Toast.makeText(context, loginState!!.msg, Toast.LENGTH_SHORT).show()

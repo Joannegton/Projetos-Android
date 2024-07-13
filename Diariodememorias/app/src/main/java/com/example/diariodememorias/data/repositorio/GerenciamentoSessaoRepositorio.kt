@@ -30,6 +30,10 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
     private val _verificarUsuarioLogado = MutableStateFlow(false)
     private val verificarUsuarioLogado = _verificarUsuarioLogado.asStateFlow()
 
+    private val _usuarioAtual = MutableStateFlow<String?>(null)
+    val usuarioAtual = _usuarioAtual.asStateFlow()
+
+
     private val usuarioPrefs: SharedPreferences = context.getSharedPreferences(
         "dados_usuario",
         Context.MODE_PRIVATE
@@ -71,6 +75,7 @@ class GerenciadorDeSessaoRepositorio @Inject constructor(@ApplicationContext pri
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val uid = auth.currentUser?.uid
+                    _usuarioAtual.value = uid
                     uid?.let {
                         CoroutineScope(Dispatchers.IO).launch {
                             try {

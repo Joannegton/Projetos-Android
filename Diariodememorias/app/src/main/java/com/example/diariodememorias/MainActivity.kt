@@ -66,6 +66,7 @@ class MainActivity : ComponentActivity() {
                             Login(
                                 navController,
                                 gerenciadorViewModel,
+                                memoriaVielModel,
                                 onLoginSuccess = { navController.navigate("diary") }
                             )
                         }

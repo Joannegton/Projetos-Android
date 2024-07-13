@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,17 +37,20 @@ class MemoriaViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            todasMemorias.collectLatest { memorias ->
-                val usuarioId = gerenciadorDeSessao.obterUid()
+            combine(
+                repository.memories,
+                gerenciadorDeSessao.usuarioAtual
+            ) { memorias, usuarioId ->
                 val parceiroId = gerenciadorDeSessao.obterUidParceiro()
-                val memoriasFiltradas = memorias.filter {
+                memorias.filter {
                     it.usuarioId == usuarioId || (parceiroId != null && it.compartilhadoCom == parceiroId)
-                }
+                }}.collectLatest { memoriasFiltradas ->
                 _memories.value = memoriasFiltradas
                 Log.d("TAG", "initt: $memoriasFiltradas")
             }
         }
     }
+
 
     // Função para adicionar uma memória
     fun adicionarMemoria(memoria: Memoria) {
@@ -64,6 +68,7 @@ class MemoriaViewModel @Inject constructor(
         }
     }
 
+
     // Função para enviar mídia
     suspend fun enviarMidia(uri: Uri): Resultado<String> {
         _isCarregando.value = true
@@ -71,4 +76,21 @@ class MemoriaViewModel @Inject constructor(
         _isCarregando.value = false
         return resultado
     }
+
+    fun carregarMemorias() {
+        viewModelScope.launch {
+            combine(
+                repository.memories,
+                gerenciadorDeSessao.usuarioAtual
+            ) { memorias, usuarioId ->
+                val parceiroId = gerenciadorDeSessao.obterUidParceiro()
+                memorias.filter {
+                    it.usuarioId == usuarioId || (parceiroId != null && it.compartilhadoCom == parceiroId)
+                }}.collectLatest { memoriasFiltradas ->
+                _memories.value = memoriasFiltradas
+                Log.d("TAG", "carregarMemorias: $memoriasFiltradas")
+            }
+        }
+    }
+
 }
