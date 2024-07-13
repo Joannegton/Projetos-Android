@@ -98,9 +98,8 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.1")
 
     implementation ("androidx.compose.material:material-icons-extended:1.6.8")
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
-    implementation("androidx.security:security-crypto:1.1.0-alpha03")
+    implementation("com.google.android.gms:play-services-ads:23.2.0")
 }
 
 kapt {
