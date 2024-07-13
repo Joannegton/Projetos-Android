@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -142,7 +143,7 @@ fun TopAppBarMaster(
                     colors = MenuDefaults.itemColors(
                         textColor = MaterialTheme.colorScheme.onPrimary,
                         leadingIconColor = MaterialTheme.colorScheme.onPrimary
-                    ),
+                    )
                 )
                 Divider(
                     color = MaterialTheme.colorScheme.onPrimary,

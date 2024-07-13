@@ -36,7 +36,7 @@ fun VisualizadorImagemUrl(
     dialogVisivel: Boolean,
     onDialogDismiss: () -> Unit,
 ) {
-    var scale by remember { mutableFloatStateOf(2f) }
+    var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
 
     if (dialogVisivel) {
