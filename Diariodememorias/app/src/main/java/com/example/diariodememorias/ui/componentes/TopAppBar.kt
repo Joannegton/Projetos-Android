@@ -1,24 +1,37 @@
 package com.example.diariodememorias.ui.componentes
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Adb
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -109,21 +122,52 @@ fun TopAppBarMaster(
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = "Menu",
-                    tint = MaterialTheme.colorScheme.secondaryContainer
+                    tint = Color.White
                 )
             }
 
             DropdownMenu(
                 expanded = mostrarMenu,
-                onDismissRequest = { mostrarMenu = false }
+                onDismissRequest = { mostrarMenu = false },
+                modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer)
             ) {
                 DropdownMenuItem(
-                    text = { Text(text = "Sair") },
+                    text = { Text(text = "Sair", fontSize = 16.sp) },
                     onClick = {
                         viewModel2.sair()
                         navController.navigate("login")
                         mostrarMenu = false
-                    }
+                    },
+                    leadingIcon = {Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sair")},
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.onPrimary,
+                        leadingIconColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                )
+                Divider(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    thickness = 2.dp,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                )
+
+                val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()){}
+                DropdownMenuItem(
+                    text = { Text(text = "Reportar Bug/Melhoria", fontSize = 16.sp) },
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://forms.gle/e7oyHvGrUjmbai9M6"))
+                        launcher.launch(intent)
+                        mostrarMenu = false
+                    },
+                    leadingIcon = {Icon(Icons.Filled.Adb, contentDescription = "Bug")},
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.onPrimary,
+                        leadingIconColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
+                Divider(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    thickness = 2.dp,
+                    modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
 
@@ -132,7 +176,7 @@ fun TopAppBarMaster(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.secondaryContainer
+            titleContentColor = Color.White
         )
     )
 }

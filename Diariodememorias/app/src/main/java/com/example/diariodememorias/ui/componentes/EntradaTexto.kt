@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -52,14 +53,14 @@ fun EntradaTexto(
         isError = erro,
         singleLine = linhaUnica,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = secondaryContainerLight,
-            unfocusedContainerColor = secondaryContainerLight,
+            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             focusedTextColor = Color.Black,
-            unfocusedTextColor = secondaryLight,
+            unfocusedTextColor = MaterialTheme.colorScheme.secondary,
             cursorColor = Color.White,
-            focusedLabelColor = secondaryLight,
-            unfocusedLabelColor = secondaryLight,
-            focusedBorderColor = secondaryLight,
+            focusedLabelColor = MaterialTheme.colorScheme.secondary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary,
+            focusedBorderColor = MaterialTheme.colorScheme.secondary,
             unfocusedBorderColor = secondaryDark
             ),
         visualTransformation = if (isSenha && !senhaVisivel.value) PasswordVisualTransformation() else VisualTransformation.None,

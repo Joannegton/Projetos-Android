@@ -81,7 +81,7 @@ fun Login(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(MaterialTheme.colorScheme.primaryContainer)
     ) {
         Spacer(modifier = Modifier.padding(50.dp))
 
@@ -131,10 +131,10 @@ fun Login(
         Spacer(modifier = Modifier.padding(15.dp))
 
         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Não possui conta?", fontSize = 20.sp)
+            Text(text = "Não possui conta?", fontSize = 20.sp, color = MaterialTheme.colorScheme.onPrimary)
             Text(
                 text = "Cadastre-se",
-                color = secondaryLight,
+                color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier

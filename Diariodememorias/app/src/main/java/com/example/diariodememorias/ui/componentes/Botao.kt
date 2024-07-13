@@ -22,7 +22,7 @@ fun Botao(
     fonteTexto: Int = 20,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
-    cor: Color = secondaryDark
+    cor: Color = MaterialTheme.colorScheme.tertiary
 ) {
     Button(
         onClick = onClick,

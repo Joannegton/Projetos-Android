@@ -84,7 +84,7 @@ fun DiaryApp(
                 FloatingActionButton(
                     onClick = { showAddMemoryDialog = true },
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    contentColor = Color.White
                 ) {
                     Icon(
                         Icons.Default.Add,
@@ -305,7 +305,7 @@ fun AddMemoriaScreen(
 
             }
         },
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
     )
 }
 

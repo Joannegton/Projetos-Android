@@ -1,5 +1,6 @@
 package com.example.diariodememorias.ui.componentes
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
@@ -12,6 +13,6 @@ fun Titulo(texto: String) {
         text = texto,
         fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
-        color = secondaryLight
+        color = MaterialTheme.colorScheme.onPrimary
     )
 }
