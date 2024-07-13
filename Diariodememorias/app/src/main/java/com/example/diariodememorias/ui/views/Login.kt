@@ -1,9 +1,9 @@
 package com.example.diariodememorias.ui.views
+
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,20 +25,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.compose.secondaryLight
+import androidx.navigation.compose.rememberNavController
 import com.example.diariodememorias.R
 import com.example.diariodememorias.ui.componentes.Botao
 import com.example.diariodememorias.ui.componentes.EntradaTexto
 import com.example.diariodememorias.ui.componentes.Titulo
+import com.example.diariodememorias.ui.theme.DiarioDeMemoriasTheme
+import com.example.diariodememorias.ui.theme.secondaryLight
 import com.example.diariodememorias.viewModel.GerenciamentoSessaoViewModel
 import com.example.diariodememorias.viewModel.MemoriaViewModel
 import com.example.diariodememorias.viewModel.ResultadoLogin
@@ -48,7 +51,8 @@ fun Login(
     navController: NavController,
     viewModel: GerenciamentoSessaoViewModel,
     memoriaViewModel: MemoriaViewModel,
-    onLoginSuccess: () -> Unit) {
+    onLoginSuccess: () -> Unit
+) {
     // Estados mutáveis para os campos de entrada de email e senha
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
@@ -96,7 +100,7 @@ fun Login(
         // Campo de entrada de email
         EntradaTexto(
             texto = email.replace(" ", ""),
-            onValueChange = {email = it},
+            onValueChange = { email = it },
             label = "email",
         )
 
@@ -105,7 +109,7 @@ fun Login(
         // Campo de entrada de senha
         EntradaTexto(
             texto = senha.replace(" ", ""),
-            onValueChange = {senha = it},
+            onValueChange = { senha = it },
             label = "Senha",
             isSenha = true,
             keyboardType = KeyboardType.Password,
@@ -117,7 +121,7 @@ fun Login(
         // Botão de Login
         Botao(
             onClick = {
-            viewModel.entrar(email, senha)
+                viewModel.entrar(email, senha)
             },
             texto = "Entrar",
             modifier = Modifier.fillMaxWidth()
@@ -126,7 +130,7 @@ fun Login(
 
         Spacer(modifier = Modifier.padding(15.dp))
 
-        Row (horizontalArrangement = Arrangement.Center ,modifier = Modifier.fillMaxWidth()){
+        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Não possui conta?", fontSize = 20.sp)
             Text(
                 text = "Cadastre-se",
@@ -146,7 +150,7 @@ fun Login(
             if (loginState!!.sucesso) {
                 onLoginSuccess()
                 memoriaViewModel.carregarMemorias()
-            } else{
+            } else {
                 Log.i("Tag", loginState!!.msg!!)
                 Toast.makeText(context, loginState!!.msg, Toast.LENGTH_SHORT).show()
             }
@@ -154,10 +158,26 @@ fun Login(
         }
     }
 
-    LaunchedEffect (usuarioLogado){
-        if (usuarioLogado){
+    LaunchedEffect(usuarioLogado) {
+        if (usuarioLogado) {
             navController.navigate("diary")
         }
     }
 }
 
+@Preview
+@Composable
+private fun Previ() {
+    DiarioDeMemoriasTheme {
+        val gerenciadorViewModel: GerenciamentoSessaoViewModel = hiltViewModel()
+        val memoriaVielModel: MemoriaViewModel = hiltViewModel()
+
+        Login(
+            navController = rememberNavController(),
+            viewModel = gerenciadorViewModel,
+            memoriaViewModel = memoriaVielModel
+        ) {
+
+        }
+    }
+}

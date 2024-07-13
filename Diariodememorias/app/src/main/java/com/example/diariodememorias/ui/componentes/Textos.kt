@@ -4,7 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.compose.secondaryLight
+import com.example.diariodememorias.ui.theme.secondaryLight
 
 @Composable
 fun Titulo(texto: String) {
