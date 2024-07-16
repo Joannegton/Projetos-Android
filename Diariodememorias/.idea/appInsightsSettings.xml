@@ -3,12 +3,26 @@
   <component name="AppInsightsSettings">
     <option name="tabSettings">
       <map>
+        <entry key="Android Vitals">
+          <value>
+            <InsightsFilterSettings>
+              <option name="connection">
+                <ConnectionSetting>
+                  <option name="appId" value="com.joannegton.diariodememorias" />
+                </ConnectionSetting>
+              </option>
+              <option name="signal" value="SIGNAL_UNSPECIFIED" />
+              <option name="timeIntervalDays" value="SEVEN_DAYS" />
+              <option name="visibilityType" value="ALL" />
+            </InsightsFilterSettings>
+          </value>
+        </entry>
         <entry key="Firebase Crashlytics">
           <value>
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.diariodememorias" />
+                  <option name="appId" value="com.joannegton.diariodememorias" />
                   <option name="mobileSdkAppId" value="1:570048756177:android:6612a14f06558ce66948f0" />
                   <option name="projectId" value="diariomemorias" />
                   <option name="projectNumber" value="570048756177" />

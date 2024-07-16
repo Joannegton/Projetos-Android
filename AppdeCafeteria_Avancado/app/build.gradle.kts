@@ -1,18 +1,15 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
-    id ("kotlin-kapt")
-    id ("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.joannegton.diariodememorias"
+    namespace = "com.marcos.appdecafeteria"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.joannegton.diariodememorias"
+        applicationId = "com.marcos.appdecafeteria"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -26,7 +23,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -63,8 +60,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.firebase.common.ktx)
-    implementation(libs.androidx.ui.text.google.fonts)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,36 +67,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    //coil - carregamento de imagens de forma assincrona
-    implementation("io.coil-kt:coil-compose:1.3.2")
-
-    //firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-storage-ktx")
-    implementation ("com.google.android.gms:play-services-auth:21.2.0")
-
-    //navegacao
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-
-    //componente de paginação
-    implementation ("com.google.accompanist:accompanist-pager:0.20.0")
-
-    //dagger hilt - injeção de dependencia
-    implementation ("com.google.dagger:hilt-android:2.51.1")
-    kapt ("com.google.dagger:hilt-compiler:2.51.1")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
-
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
-    implementation (libs.androidx.lifecycle.runtime.ktx.v283)
-
-    implementation ("androidx.compose.material:material-icons-extended:1.6.8")
-
-    implementation("com.google.android.gms:play-services-ads:23.2.0")
-}
-
-kapt {
-    correctErrorTypes = true
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
 }

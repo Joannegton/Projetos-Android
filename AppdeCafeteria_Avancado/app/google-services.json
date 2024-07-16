@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "609337168407",
+    "project_id": "app-de-cafeteria-a9a4a",
+    "storage_bucket": "app-de-cafeteria-a9a4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609337168407:android:580b28d05d97fbfb3e0252",
+        "android_client_info": {
+          "package_name": "com.marcos.appdecafeteria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoRQ-gU7_-PWQQGwJR1QvJsIVEC3DW41I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
