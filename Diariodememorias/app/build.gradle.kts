@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.diariodememorias"
+    namespace = "com.joannegton.diariodememorias"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.diariodememorias"
+        applicationId = "com.joannegton.diariodememorias"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:570048756177:android:6612a14f06558ce66948f0",
         "android_client_info": {
-          "package_name": "com.example.diariodememorias"
+          "package_name": "com.joannegton.diariodememorias"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "570048756177-ocr968gf0kjrg13367uhqbuuson6cs0g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.diariodememorias",
+            "package_name": "com.joannegton.diariodememorias",
             "certificate_hash": "6b332a4d1b526740ca849c0b74273357f541ea9b"
           }
         },
