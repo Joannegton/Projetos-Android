@@ -45,7 +45,7 @@ class MemoriaRepositorio @Inject constructor() {
     suspend fun adicionarMemoria(memoria: Memoria): Result<Unit> {
         return try {
             val memoriaRef = db.collection("memories").document()
-            val memoriaData = memoria.copy()
+            val memoriaData = memoria.copy(id = memoriaRef.id)
             memoriaRef.set(memoriaData).await()
             Result.success(Unit)
         } catch (e: Exception) {
@@ -62,6 +62,23 @@ class MemoriaRepositorio @Inject constructor() {
             Resultado.Sucesso(downloadUri.toString())
         } catch (e: Exception) {
             Resultado.Falha(e.message.toString())
+        }
+    }
+
+    suspend fun apagarMemoria(memoriaId: String){
+        try {
+            val memoriaRef = db.collection("memories").document(memoriaId)
+            val memoria = memoriaRef.get().await().toObject(Memoria::class.java)
+
+            memoriaRef.delete().await()
+
+            memoria?.imageUri?.let {
+                val storageRef = storage.getReferenceFromUrl(it)
+                storageRef.delete().await()
+            }
+
+        } catch (e: Exception) {
+            Log.e("TAG", "Erro ao apagar memória", e)
         }
     }
 }

@@ -77,7 +77,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:1.3.2")
 
     //firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage-ktx")
@@ -94,8 +94,8 @@ dependencies {
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
+    implementation (libs.androidx.lifecycle.runtime.ktx.v283)
 
     implementation ("androidx.compose.material:material-icons-extended:1.6.8")
 

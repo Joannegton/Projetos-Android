@@ -2,7 +2,7 @@ package com.example.diariodememorias.data.models
 
 
 data class Memoria(
-//    val id: String? = null,
+    val id: String = "",
     val title: String = "",
     val description: String = "",
     val imageUri: String? = null,

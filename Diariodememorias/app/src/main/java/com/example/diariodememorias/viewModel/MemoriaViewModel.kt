@@ -91,4 +91,10 @@ class MemoriaViewModel @Inject constructor(
         }
     }
 
+    fun apagarMemoria(memoriaId: String) {
+        viewModelScope.launch {
+            repository.apagarMemoria(memoriaId)
+        }
+    }
+
 }

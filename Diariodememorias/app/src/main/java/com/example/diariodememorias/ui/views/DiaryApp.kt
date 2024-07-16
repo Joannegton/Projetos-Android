@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,11 +22,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -99,7 +104,7 @@ fun DiaryApp(
             Column(Modifier.fillMaxSize()) {
                 LazyColumn {
                     items(memories) { memory ->
-                        CardMemoria(memory) {
+                        CardMemoria(memory, viewModel) {
                             imagePaint = it
                             onOpenViewer()
                         }
@@ -129,8 +134,13 @@ fun DiaryApp(
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun CardMemoria(memory: Memoria, onOpenViewer: (ImagePainter) -> Unit) {
+fun CardMemoria(
+    memory: Memoria,
+    viewModel: MemoriaViewModel,
+    onOpenViewer: (ImagePainter) -> Unit
+) {
     val imagePainter = rememberImagePainter(memory.imageUri)
+    var mostrarDialogo by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -142,11 +152,54 @@ fun CardMemoria(memory: Memoria, onOpenViewer: (ImagePainter) -> Unit) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = memory.title,
-                style = MaterialTheme.typography.titleLarge,
-                fontSize = 25.sp
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = memory.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 25.sp
+                )
+                IconButton(onClick = { mostrarDialogo = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Apagar memoria",
+                        tint = Color.Red
+                    )
+                }
+            }
+
+            if (mostrarDialogo) {
+                AlertDialog(
+                    onDismissRequest = { /*TODO*/ },
+                    confirmButton = {
+                        Botao(
+                            onClick = {
+                                viewModel.apagarMemoria(memory.id)
+                                mostrarDialogo = false
+                            },
+                            texto = "Apagar",
+                            largura = 124,
+                            fonteTexto = 16
+                        )
+                    },
+                    dismissButton = { // Botão de fechar
+                        Botao(
+                            onClick = { mostrarDialogo = false },
+                            texto = "Cancelar",
+                            largura = 140,
+                            fonteTexto = 16
+                        )
+                    },
+                    title = { Text(text = "Apagar Memória") },
+                    text = {
+                        Text(text = "Tem certeza que deseja apagar esta memória?")
+                    }
+                )
+
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -172,6 +225,7 @@ fun CardMemoria(memory: Memoria, onOpenViewer: (ImagePainter) -> Unit) {
         }
     }
 }
+
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -249,7 +303,10 @@ fun AddMemoriaScreen(
                             }
                     )
                 }
-                VisualizadorImagem(imagem = imagemUri, dialog = showDialog, onDialogDismiss = { showDialog = false } )
+                VisualizadorImagem(
+                    imagem = imagemUri,
+                    dialog = showDialog,
+                    onDialogDismiss = { showDialog = false })
 
                 if (isCarregando) {
                     CircularProgressIndicator()
